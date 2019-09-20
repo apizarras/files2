@@ -16,6 +16,16 @@ const columns = [
     key="last-modified-date"
     label="Last Modified Date"
     property="lastModifiedDate"
+  />,
+  <DataTableColumn
+    key="last-modified-by"
+    label="Last Modified By"
+    property="lastModifiedBy"
+  />,
+  <DataTableColumn
+    key="sync"
+    label="Sync"
+    property="Sync"
   />
 ]
 
@@ -39,6 +49,7 @@ class FileView extends Component {
         }
 
     componentDidMount() {
+      //fetch file data to render on FileDataTable
         console.log("component did mount", this.state)
     }
 
@@ -102,6 +113,7 @@ class FileView extends Component {
                 <DataTable>
                   {columns}
                 </DataTable>
+                { console.log("files: ", this.state.files) }
               <FileDataTable files={this.state.files} />
             </Card>
             </div>

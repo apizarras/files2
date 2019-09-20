@@ -27,44 +27,44 @@ const AddFileDialog = ({handleClose, children, isOpen, onSave, parentId, connect
         setHasNewFile(!!e.target.value)
       };
 
-    // function uploadFile() {
-    //     const fxFileInput = document.getElementById('fxFileInput');
-    //     var file = fxFileInput.files[0];
-    //     if (!file) return Promise.resolve();
+    function uploadFile() {
+        const fxFileInput = document.getElementById('fxFileInput');
+        var file = fxFileInput.files[0];
+        if (!file) return Promise.resolve();
     
-    //     setShowPercentCompleted(true);
+        setShowPercentCompleted(true);
     
-    //     var reader = new FileReader();
+        var reader = new FileReader();
 
-    //     return new Promise(function(resolve, reject){
-    //       reader.onload = function( e ) {
-    //         var fileData = btoa( e.target.result );
+        return new Promise(function(resolve, reject){
+          reader.onload = function( e ) {
+            var fileData = btoa( e.target.result );
     
-    //         var contentVersionData = {
-    //             "FirstPublishLocationId": parentId,
-    //             "Title": file.name,
-    //             "PathOnClient": file.name,
-    //             "VersionData": fileData
-    //           };
-    //         const onUploadProgress = function(progressEvent) {
-    //             console.log("progress event: ", progressEvent);
-    //           setPercentCompleted( Math.round( (progressEvent.loaded * 100) / progressEvent.total ));
-    //           console.log(`%c>>>> percentCompleted `, `background-color: yellow;` , percentCompleted, progressEvent );
-    //         };
-    // console.log("percent Completed: ", percentCompleted);
+            var contentVersionData = {
+                "FirstPublishLocationId": parentId,
+                "Title": file.name,
+                "PathOnClient": file.name,
+                "VersionData": fileData
+              };
+            const onUploadProgress = function(progressEvent) {
+                console.log("progress event: ", progressEvent);
+              setPercentCompleted( Math.round( (progressEvent.loaded * 100) / progressEvent.total ));
+              console.log(`%c>>>> percentCompleted `, `background-color: yellow;` , percentCompleted, progressEvent );
+            };
+    console.log("percent Completed: ", percentCompleted);
 
-    //         return api.uploadFile( connection, parentId, contentVersionData, onUploadProgress )
-    //           .then(resolve, reject);
-    //       };
+            // return api.uploadFile( connection, parentId, contentVersionData, onUploadProgress )
+            //   .then(resolve, reject);
+          };
     
-    //       reader.readAsBinaryString( file );
-    //     })
-    //     .then(saveAndClose)
-    //     .catch(function(err) {
-    //       setUploadError(err);
-    //       console.log(`%c>>>> ERROR `, `background-color: yellow; color:green;` , err );
-    //     })
-    //   }
+          reader.readAsBinaryString( file );
+        })
+        .then(saveAndClose)
+        .catch(function(err) {
+          setUploadError(err);
+          console.log(`%c>>>> ERROR `, `background-color: yellow; color:green;` , err );
+        })
+      }
     
     return (
     <div
