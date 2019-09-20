@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Connect from './Connect';
-import Menu from './Menu';
+// import Menu from './Menu';
 import { SettingsProvider } from './Settings';
-import DesignAttributesEditor from './DesignAttributesEditor';
-import EventsTester from '../EventsTester';
+// import DesignAttributesEditor from './DesignAttributesEditor';
+// import EventsTester from '../EventsTester';
 
 export * from './Connect';
 export * from './Settings';
@@ -28,7 +28,7 @@ export const ConnectionProvider = ({ children }) => {
             bottom: 0,
             left: 0,
           }}>
-          <Menu />
+          
           <div className="slds-brand-band slds-brand-band_medium">
             <section
               style={{
@@ -47,8 +47,8 @@ export const ConnectionProvider = ({ children }) => {
                   }}>
                   <div style={{ width: '66.66%' }}>{children}</div>
                   <div style={{ width: '33.33%', paddingLeft: '.75rem' }}>
-                    <EventsTester />
-                    <DesignAttributesEditor />
+                    
+                    
                   </div>
                 </div>
               </div>

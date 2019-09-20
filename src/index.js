@@ -15,5 +15,5 @@ ReactDOM.render(
   <ConnectionProvider>
     <LocalComponent />
   </ConnectionProvider>,
-  document.getElementById('root'),
+  document.getElementById('fx'),
 );
