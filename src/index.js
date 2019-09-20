@@ -1,12 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import LightningComponent from './index-lightning';
+import { createDataService, events } from './localhost/apiMethods';
+import { ConnectionProvider, useConnection, useSettings } from './localhost/context';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+function LocalComponent() {
+  const connection = useConnection();
+  const [settings] = useSettings();
+  const dataService = createDataService(connection);
+  return <LightningComponent settings={settings} dataService={dataService} events={events} />;
+}
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+ReactDOM.render(
+  <ConnectionProvider>
+    <LocalComponent />
+  </ConnectionProvider>,
+  document.getElementById('root'),
+);
