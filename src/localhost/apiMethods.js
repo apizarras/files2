@@ -1,4 +1,10 @@
-const createDataService = connection => ({
+import { CONTENTDOCUMENTLINK_FIELDS } from '../constants';
+
+const createDataService = connection => {
+  console.log("connection: ", connection);
+  let acls = {};
+  const descriptions=  {}; 
+return {
   describe: sobject => connection.describe(sobject),
   describeFields: sobject =>
     connection.describe(sobject).then(description =>
@@ -26,21 +32,6 @@ const createDataService = connection => ({
       defaultCurrency: 'USD'
     });
   },
-  updateItems: (sobjectType, changes) => {
-    return connection
-      .sobject(sobjectType)
-      .update(changes, { allOrNone: false })
-      .then(results => {
-        return {
-          updatedRecords: results.map(r => r.id),
-          errors: results
-            .filter(r => !r.success)
-            .map(r => {
-              return { id: r.id, message: r.errors.map(e => e.message).join(' ') };
-            })
-        };
-      });
-  },
   deleteItems: (sobjectType, ids) => {
     return connection
       .sobject(sobjectType)
@@ -59,18 +50,93 @@ const createDataService = connection => ({
         };
       });
   },
-  restApi: connection.getJSON,
-  apexRest: (method, payload) => {
-    const { accessToken } = connection;
-    const encoded = `method=${method}&payload=${payload}`.replace(/\s/g, '+');
-    // const namespace = window.location.hostname !== 'localhost' ? '/FXLC' : '';
-    const namespace = '/FXLC';
-    const url = `${namespace}/restEndpoint?${encoded}`;
-    const options = { headers: { Authorization: `Bearer ${accessToken}` } };
+  //need to move fetchFiles method?
+  fetchFiles: (connection, sobjectId, embedded) => {
+    let sortOpts = ['ContentDocument.LatestPublishedVersion.SystemModStamp DESC', 'SystemModStamp DESC'];
+    console.log("contentDocument fields", CONTENTDOCUMENTLINK_FIELDS); 
+    if (embedded) {
+      // sort by FX5__Sync__c first, so synced files show first in compact view
+      sortOpts.splice(0,0,'ContentDocument.LatestPublishedVersion.FX5__Sync__c DESC');
+    }
+    return connection
+      .sobject('ContentDocumentLink')
+      .select(CONTENTDOCUMENTLINK_FIELDS.join(', '))
+      .where(`LinkedEntityId = '${sobjectId}'`)
+      .sort(sortOpts.join(','))
+      .execute()
+      .then(result => {
+        console.log('fetchFiles:', result);
+        return result;
+      });
+  },
+  describeGlobal: () => {
+    return connection
+    .describeGlobal()
+    .then(({ sobjects }) => {
+      sobjects.reduce((descriptions, sobject) => {
+        descriptions[sobject.keyPrefix] = sobject;
+        return descriptions;
+      }, {});
+      console.log("sobject: ", sobjects)
+      return sobjects
+    });
+  },
+    
+    fetchDescription: (sobject, descriptions) => {
+      console.log("descriptions", descriptions);
+      
 
-    return connection.apex.get(url, options);
-  }
-});
+      if (descriptions[sobject]) return Promise.resolve(descriptions[sobject]);
+      descriptions[sobject] = null;
+    
+      return connection
+        .sobject(sobject)
+        .describe()
+        .then(result => {
+          result.fieldMap = result.fields.reduce(function(map, field) {
+            map[field.name] = field;
+            return map;
+          }, {});
+    
+          var objKey = sobject.toLowerCase();
+          var aliasKey = objKey.replace(/__c$/,'').replace(/^\w*__/,'').replace(/_/g,'');
+    
+          var obj = result;
+          if(objKey !== aliasKey){
+            acls[aliasKey + '_read'] = !!obj;
+            acls[aliasKey + '_create'] = (obj && obj.createable) || false;
+            acls[aliasKey + '_update'] = (obj && obj.updateable) || false;
+            acls[aliasKey + '_delete'] = (obj && obj.deletable) || false;
+          }
+    
+          acls[objKey + '_read'] = !!obj;
+          acls[objKey + '_create'] = (obj && obj.createable) || false;
+          acls[objKey + '_update'] = (obj && obj.updateable) || false;
+          acls[objKey + '_delete'] = (obj && obj.deletable) || false;
+    
+          return (descriptions[sobject] = result);
+        })
+        .catch(error => {
+          console.log(`%c>>>>  Error fetching description: `, `background-color: red; color:yellow;`, sobject, error);
+          return null;
+        });
+    
+    },
+    getObjectInfo: (connection, sobject, id) => {
+      return connection
+        .sobject(sobject)
+        .select('Name, FX5__Tracking_Number__c')
+        .where(`Id = '${id}'`)
+        .execute({ autoFetch: true })
+        .then(records => {
+          const rec = records[0];
+          return rec.FX5__Tracking_Number__c;
+        });
+    },
+};
+
+
+};
 
 let lightningEventsCallback;
 let updateCellCallback;

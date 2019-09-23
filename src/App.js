@@ -3,10 +3,10 @@ import logo from './logo.svg';
 import './App.css';
 import FileView from './components/FileView';
 
-function App() {
+function App(props) {
   return (
     <div className="App">
-      <FileView />
+      <FileView {...props}/>
     </div>
   );
 }

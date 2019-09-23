@@ -1,20 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { IconSettings } from '@salesforce/design-system-react';
-import {
-  LightningContextProvider
-} from './components/Context';
 import App from './App';
 import { DESIGN_ATTRIBUTES } from './constants';
 
-export default function LightningComponent({ dataService, settings, events }) {
+export default function LightningComponent({ dataService, settings, events, connection }) {
   return (
     <IconSettings iconPath="/_slds/icons">
-      <LightningContextProvider dataService={dataService} settings={settings} events={events}>
         
-            <App />
-          
-      </LightningContextProvider>
+            <App dataService={dataService} settings={settings} events={events} connection={connection}/>
+
     </IconSettings>
   );
 }
