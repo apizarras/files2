@@ -10,6 +10,8 @@ const AddFileDialog = ({handleClose, children, isOpen, onSave, parentId, connect
     const [showPercentCompleted, setShowPercentCompleted] = React.useState(false);
     const [uploadError, setUploadError] = React.useState(null);
     const [hasNewFile, setHasNewFile] = React.useState(false);
+    console.log("parentId", parentId);
+    console.log("state onclick upload",  );
 
     function resetAndOpen() {
         setUploadError(null);

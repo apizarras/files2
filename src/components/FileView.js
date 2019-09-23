@@ -48,9 +48,14 @@ class FileView extends Component {
             }
         }
 
+    //method to load existing attached Files
+    fetchFiles = () => {
+      console.log("fetching files")
+    }
+
     componentDidMount() {
       //fetch file data to render on FileDataTable
-        console.log("component did mount", this.state)
+        console.log("component did mount", this.state);
     }
 
     toggleOpen = () => {

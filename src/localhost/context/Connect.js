@@ -68,8 +68,9 @@ export function getConnection(onSessionExpired) {
       connection.identity = identity;
       connection.logout = () => (window.location.href = LOGOUT_URL);
       connection.getJSON = resource => getJSON(connection, resource, onSessionExpired);
-
+      console.log("connection", connection)
       return connection;
+      
     });
 }
 
