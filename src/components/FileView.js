@@ -86,9 +86,13 @@ class FileView extends Component {
             return this.props.dataService.fetchDescription(connection, descriptions)
           })
           .then(() => {
-            console.log(this.props.dataService)
+            console.log(this.props.dataService);
+            console.log("state sObjectId", this.state.sObjectId);
             const description = descriptions[sObjectId.slice(0,3)];
-            return Promise.all([this.props.dataService.fetchFiles(connection, sObjectId, embedded), this.props.dataService.getObjectInfo(connection, description.name, sObjectId)])
+            console.log("description, ", description);
+            return Promise.all([this.props.dataService.fetchFiles(connection, sObjectId, embedded)
+              // , this.props.dataService.getObjectInfo(connection, sObjectId)
+            ])
           })
           .then(([files, objectName]) => {
             this.setState({ files, objectName, isBusy: false });
@@ -118,6 +122,8 @@ class FileView extends Component {
                         connection={this.props.connection}
                         parentId={this.state.sObjectId}
                         handleClose={this.toggleClose}
+                        files={this.state.files}
+                        dataService={this.props.dataService}
                         />
                 </Modal>
                 <DataTable>

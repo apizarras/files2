@@ -1,5 +1,5 @@
 import React from 'react';
-import { IconSettings, DataTable, DataTableColumn, DataTableCell } from '@salesforce/design-system-react';
+import { IconSettings } from '@salesforce/design-system-react';
 
 const FileDataTable = (props) => {
     console.log("files state: ", props);
@@ -16,12 +16,7 @@ const FileDataTable = (props) => {
         return (
             <IconSettings iconPath="assets/icons">
                 <div style={{overflow: 'auto'}}>
-                    <h3 className="slds-text-heading_medium slds-m-vertical_medium">
-                        Files
-                    </h3>
-                    <DataTable items={file}>
-                
-                    </DataTable>
+                        <li> File Id: {file.Id} </li>
                 </div>
             </IconSettings>
         )
