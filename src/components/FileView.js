@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Icon, IconSettings, Card, Modal, DataTable, DataTableColumn, DataTableCell }  from '@salesforce/design-system-react';
+import { Icon, IconSettings, Card, Modal, DataTable, DataTableColumn, DataTableCell, DataTableRowActions }  from '@salesforce/design-system-react';
 import './FileView.css';
 import AddFileDialog from './AddFileDialog';
 // import * as api from '../api/api';
@@ -126,11 +126,14 @@ class FileView extends Component {
                         dataService={this.props.dataService}
                         />
                 </Modal>
-                <DataTable>
+                <DataTable items={this.state.files}>
                   {columns}
+                  <DataTableRowActions options={[
+                    {label: "Preview"}, {label: "Delete"}
+                  ]} />
                 </DataTable>
                 { console.log("files: ", this.state.files) }
-              <FileDataTable files={this.state.files} />
+              {/* <FileDataTable files={this.state.files} /> */}
             </Card>
             </div>
         </IconSettings>

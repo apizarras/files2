@@ -1,5 +1,4 @@
 import React from 'react';
-import { createDataService } from '../localhost/apiMethods';
 import { ProgressBar, SetupAssistantStep } from '@salesforce/design-system-react';
 import { NONAME } from 'dns';
 
@@ -12,16 +11,16 @@ const AddFileDialog = ({handleClose, children, isOpen, onSave, parentId, connect
     console.log("parentId", parentId);
     console.log("props.dataService: ", props.dataService);
 
-    function resetAndOpen() {
+    function reset() {
         setUploadError(null);
         setShowPercentCompleted(false);
-        setPercentCompleted(null)
-        // setIsOpen(true);
+        setPercentCompleted(null);
+        handleClose();
       }
 
       function saveAndClose() {
         onSave();
-        // setIsOpen(false);
+        reset();
       }
 
       const handleFileChange = (e) => {
