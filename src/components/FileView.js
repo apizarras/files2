@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Icon, IconSettings, Card, Modal, DataTable, DataTableColumn, DataTableCell, DataTableRowActions }  from '@salesforce/design-system-react';
+import { Icon, IconSettings, Card, Modal, DataTable, DataTableColumn, DataTableCell, DataTableRowActions, Dropdown }  from '@salesforce/design-system-react';
 import './FileView.css';
 import AddFileDialog from './AddFileDialog';
 // import * as api from '../api/api';
@@ -70,8 +70,33 @@ class FileView extends Component {
         console.log("toggleClose: ", this.state.isOpen)
     }
 
+    handleSelectionAction = (e, value) => {
+      console.log("Id: ", this.state.files[0])
+      console.log("selected: ", e, value)
+      if (value.label === "Delete") {
+        this.handleFileDelete(e.id)
+      } else {
+        this.previewFile();
+      }
+    }
+
+    handleFileDelete = (id) => {
+      console.log("file id: ", this.state.files)
+      return this.props.dataService
+      .deleteItems(id)
+      .then(response => {
+        console.log("response: ", response);
+      })
+      .catch(error => {
+        console.error(error);
+      })
+    }
+
+    previewFile = (id) => {
+      console.log("previewing the file")
+    }
+
     fetchData = () => {
-      //connection is undefined
         const { connection } = this.props;
         const { sObjectId, embedded } = this.state;
         const descriptions = {};
@@ -144,9 +169,16 @@ class FileView extends Component {
                 </Modal>
                 <DataTable items={this.state.files}>
                   {columns}
-                  <DataTableRowActions options={[
-                    {label: "Preview"}, {label: "Delete"}
-                  ]} />
+                  <DataTableRowActions
+                  item=""
+                  onAction={this.handleSelectionAction}
+                  dropdown={<Dropdown iconCategory="utility"
+                    iconName="down"
+                    // onSelect=
+                    options={[
+                      {label: "Preview"},
+                      {label: "Delete"}
+                      ]}/>} />
                 </DataTable>
             </Card>
             </div>
