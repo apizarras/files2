@@ -4,7 +4,7 @@ import './FileView.css';
 import AddFileDialog from './AddFileDialog';
 // import * as api from '../api/api';
 import queryString from 'query-string';
-import FileDataTable from './FileDataTable';
+// import FileDataTable from './FileDataTable';
 import { createDataService } from '../localhost/apiMethods';
 import { getConnection } from '../localhost/context/Connect';
 import { CONTENTDOCUMENTLINK_FIELDS } from '../constants';
@@ -72,11 +72,13 @@ class FileView extends Component {
 
     handleSelectionAction = (e, value) => {
       console.log("Id: ", this.state.files[0])
-      console.log("selected: ", e, value)
+      console.log("selected: ", e, value, e.url)
+      // const url = e.url
       if (value.label === "Delete") {
         this.handleFileDelete(e.id)
       } else {
-        this.previewFile();
+        // console.log("url", url)
+        this.previewFile(e.id);
       }
     }
 
@@ -93,7 +95,14 @@ class FileView extends Component {
     }
 
     previewFile = (id) => {
-      console.log("previewing the file")
+      console.log("previewing the file", id);
+      //open file link in new tab
+      const newUrl = "https://na73.salesforce.com/" + id;
+      const win = window.open(newUrl, '_blank')
+    }
+
+    downloadFile = () => {
+      console.log("downloading file")
     }
 
     fetchData = () => {
@@ -133,7 +142,8 @@ class FileView extends Component {
                 title: detail.ContentDocument.LatestPublishedVersion.Title,
                 lastModifiedDate: detail.ContentDocument.LatestPublishedVersion.LastModifiedDate,
                 lastModifiedBy: detail.ContentDocument.LatestPublishedVersion.LastModifiedBy.Name,
-                Sync: detail.ContentDocument.LatestPublishedVersion.FX5__Sync__c
+                Sync: detail.ContentDocument.LatestPublishedVersion.FX5__Sync__c,
+                url: detail.ContentDocument.attributes.url
               }
             })
             console.log(fileDetails);
@@ -176,6 +186,7 @@ class FileView extends Component {
                     iconName="down"
                     // onSelect=
                     options={[
+                      {label: "Download"},
                       {label: "Preview"},
                       {label: "Delete"}
                       ]}/>} />

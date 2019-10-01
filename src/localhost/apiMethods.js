@@ -37,9 +37,11 @@ return {
       defaultCurrency: 'USD'
     });
   },
-  deleteItems: (sobjectType, ids) => {
+  deleteItems: (ids) => {
+    console.log("delete apimethod");
+    console.log("connection", connection);
     return connection
-      .sobject(sobjectType)
+      .sobject("ContentDocument")
       .destroy(ids, { allOrNone: false })
       .then(results => {
         const values = ids.map((id, index) => {
