@@ -71,6 +71,7 @@ return {
       .execute()
       .then(result => {
         console.log('fetchFiles:', result);
+
         return result;
       });
   },

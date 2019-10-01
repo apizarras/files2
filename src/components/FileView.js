@@ -7,12 +7,13 @@ import queryString from 'query-string';
 import FileDataTable from './FileDataTable';
 import { createDataService } from '../localhost/apiMethods';
 import { getConnection } from '../localhost/context/Connect';
+import { CONTENTDOCUMENTLINK_FIELDS } from '../constants';
 
 const columns = [
   <DataTableColumn
-    key="file-name"
-    label="File Name"
-    property="fileName"
+    key="title"
+    label="Title"
+    property="title"
   />,
   <DataTableColumn
     key="last-modified-date"
@@ -30,6 +31,8 @@ const columns = [
     property="Sync"
   />
 ]
+
+
 
 class FileView extends Component {
     constructor(props) {
@@ -96,8 +99,21 @@ class FileView extends Component {
           })
           .then(([files, objectName]) => {
             this.setState({ files, objectName, isBusy: false });
-            console.log("files state: ", this.state.files);
-          })
+            console.log("file detail: ", this.state.files);
+            const fileDetail = this.state.files;
+            console.log(this.state);
+            const fileDetails = fileDetail.map(detail => {
+              return {
+                id: detail.ContentDocument.LatestPublishedVersion.Id,
+                title: detail.ContentDocument.LatestPublishedVersion.Title,
+                lastModifiedDate: detail.ContentDocument.LatestPublishedVersion.LastModifiedDate,
+                lastModifiedBy: detail.ContentDocument.LatestPublishedVersion.LastModifiedBy.Name,
+                Sync: detail.ContentDocument.LatestPublishedVersion.FX5__Sync__c
+              }
+            })
+            console.log(fileDetails);
+            this.setState({ ...this.state, files: fileDetails})
+            })
           .catch(function(err) {
             if (err.errorCode === 'INVALID_SESSION_ID') {
               this.setState({ sessionExpired: true, isBusy: false });
@@ -132,8 +148,6 @@ class FileView extends Component {
                     {label: "Preview"}, {label: "Delete"}
                   ]} />
                 </DataTable>
-                { console.log("files: ", this.state.files) }
-              {/* <FileDataTable files={this.state.files} /> */}
             </Card>
             </div>
         </IconSettings>
