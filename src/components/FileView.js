@@ -73,12 +73,20 @@ class FileView extends Component {
     handleSelectionAction = (e, value) => {
       console.log("Id: ", this.state.files[0])
       console.log("selected: ", e, value, e.url)
-      // const url = e.url
-      if (value.label === "Delete") {
-        this.handleFileDelete(e.id)
-      } else {
-        // console.log("url", url)
-        this.previewFile(e.id);
+      const newValue = value.label;
+      switch (newValue) {
+        case "Delete":
+          this.handleFileDelete(e.id);
+          console.log("call handleFileDelete");
+          break;
+        case "Preview":
+          this.previewFile(e.id);
+          console.log("call previewFiles");
+          break;
+        case "Download":
+          this.downloadFile(e.id);
+          console.log("call download");
+          break;
       }
     }
 
@@ -103,8 +111,10 @@ class FileView extends Component {
       const win = window.open(newUrl, '_blank')
     }
 
-    downloadFile = () => {
+    downloadFile = (e, id) => {
       console.log("downloading file");
+      //url link to file
+      this.props.dataService.downloadFile(e, id);
     }
 
     fetchData = () => {

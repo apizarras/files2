@@ -177,8 +177,33 @@ console.log("app version: ", appVersion);
           })
           .then(resolve,reject);
       });
+    },
+    downloadFile: (connection, id, contentVersionData) => {
+      var requestConfig = {
+        headers: {
+          ContentType: 'application/json',
+          Accept: 'application/json',
+          'Authorization': `Bearer ${connection.accessToken}`
+        }
+      };
+    console.log("requestConfig: ", requestConfig);
+      const apiVersion = "v42.0";
+      const appVersion = "DEV";
+      const responseType = "blob";
+      return axios.get(`${appVersion === 'DEV' ? 'https:na73.salesforce.com' : ''}/services/data/${apiVersion}/sobjects/ContentVersion/0691I00000A8DM1QAN`, contentVersionData, requestConfig, responseType)
+      .then((response) => {
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", "file.pdf");
+        link.click();
+      })
+
     }
+
+
 };
+
 
 
 };
