@@ -40,10 +40,12 @@ return {
   deleteItems: (ids) => {
     console.log("delete apimethod");
     console.log("connection", connection);
+    console.log("ids", ids);
     return connection
       .sobject("ContentDocument")
-      .destroy(ids, { allOrNone: false })
+      .destroy(ids)
       .then(results => {
+        console.log("results: ", results);
         const values = ids.map((id, index) => {
           return {
             id,
@@ -55,7 +57,10 @@ return {
           deletedRecords: values.filter(r => r.success).map(r => r.id),
           errors: values.filter(r => !r.success)
         };
-      });
+      })
+      .catch(error => {
+        console.log("error: ", error)
+      })
   },
   //need to move fetchFiles method?
   fetchFiles: (connection, sobjectId, embedded) => {

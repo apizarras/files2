@@ -83,7 +83,9 @@ class FileView extends Component {
     }
 
     handleFileDelete = (id) => {
-      console.log("file id: ", this.state.files)
+      console.log("file id: ", id);
+      console.log("props: ", this.props.dataService);
+
       return this.props.dataService
       .deleteItems(id)
       .then(response => {
@@ -102,7 +104,7 @@ class FileView extends Component {
     }
 
     downloadFile = () => {
-      console.log("downloading file")
+      console.log("downloading file");
     }
 
     fetchData = () => {
@@ -138,7 +140,7 @@ class FileView extends Component {
             console.log(this.state);
             const fileDetails = fileDetail.map(detail => {
               return {
-                id: detail.ContentDocument.LatestPublishedVersion.Id,
+                id: detail.ContentDocument.Id,
                 title: detail.ContentDocument.LatestPublishedVersion.Title,
                 lastModifiedDate: detail.ContentDocument.LatestPublishedVersion.LastModifiedDate,
                 lastModifiedBy: detail.ContentDocument.LatestPublishedVersion.LastModifiedBy.Name,
