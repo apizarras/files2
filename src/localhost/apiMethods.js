@@ -178,13 +178,13 @@ return {
           .then(resolve,reject);
       });
     },
-    downloadFile: (connection, e, id, contentVersionData) => {
+    downloadFile: (connection, e, id) => {
       console.log("connection: ", connection);
       console.log("id: ", id, e);
 
       var requestConfig = {
         headers: {
-          ContentType: 'application/json',
+          ContentType: 'blob',
           Accept: 'application/json',
           'Authorization': `Bearer ${connection.accessToken}`
         }
@@ -193,14 +193,15 @@ return {
       const apiVersion = "v42.0";
       const appVersion = "DEV";
       const responseType = "blob";
+
       return new Promise(function(resolve, reject) {
-        console.log("inside the promise");
         return axios.get(`${appVersion === 'DEV' ? connection.instanceUrl : ''}/services/data/${apiVersion}/sobjects/ContentDocument/`+ e, requestConfig, responseType)
         .then((response) => {
-          const url = window.URL.createObjectURL(new Blob([response.data]));
+          const fileName = response.data.Title;
+          const url = connection.instanceUrl + "/sfc/servlet.shepherd/document/download/" + e;
           const link = document.createElement("a");
           link.href = url;
-          link.setAttribute("download", e);
+          link.setAttribute("download", fileName);
           link.click();
         })
         .then(resolve, reject);
@@ -208,8 +209,6 @@ return {
 
     }
 };
-
-
 
 };
 
