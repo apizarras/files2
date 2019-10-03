@@ -104,10 +104,10 @@ class FileView extends Component {
       })
     }
 
-    previewFile = (id) => {
+    previewFile = (id, e) => {
       console.log("previewing the file", id);
       //open file link in new tab
-      const newUrl = "https://na73.salesforce.com/" + id;
+      const newUrl = "https://na73.salesforce.com/lightning/r/ContentDocument/" + id + "/view";
       const win = window.open(newUrl, '_blank')
     }
 

@@ -189,7 +189,6 @@ return {
           'Authorization': `Bearer ${connection.accessToken}`
         }
       };
-    console.log("requestConfig: ", requestConfig);
       const apiVersion = "v42.0";
       const appVersion = "DEV";
       const responseType = "blob";
@@ -197,18 +196,20 @@ return {
       return new Promise(function(resolve, reject) {
         return axios.get(`${appVersion === 'DEV' ? connection.instanceUrl : ''}/services/data/${apiVersion}/sobjects/ContentDocument/`+ e, requestConfig, responseType)
         .then((response) => {
+          console.log("response: ", response);
           const fileName = response.data.Title;
-          const url = connection.instanceUrl + "/sfc/servlet.shepherd/document/download/" + e;
+          const downloadUrl = connection.instanceUrl + "/sfc/servlet.shepherd/document/download/" + e;
+          // const previewUrl = connection.instanceUrl + "/sfc/servlet.shepherd/version/renditionDownload?rendition=SVGZ&versionId=0681I00000BFznHQAT";
           const link = document.createElement("a");
-          link.href = url;
+          link.href = downloadUrl;
           link.setAttribute("download", fileName);
           link.click();
         })
         .then(resolve, reject);
       })
-
     }
-};
+  }
+
 
 };
 
