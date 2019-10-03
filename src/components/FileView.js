@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Icon, IconSettings, Card, Modal, DataTable, DataTableColumn, DataTableCell, DataTableRowActions, Dropdown }  from '@salesforce/design-system-react';
+import { Icon, IconSettings, Card, Modal, DataTable, DataTableColumn, DataTableCell, Checkbox, DataTableRowActions, Dropdown }  from '@salesforce/design-system-react';
 import './FileView.css';
 import AddFileDialog from './AddFileDialog';
 // import * as api from '../api/api';
@@ -9,6 +9,14 @@ import { createDataService } from '../localhost/apiMethods';
 import { getConnection } from '../localhost/context/Connect';
 import { CONTENTDOCUMENTLINK_FIELDS } from '../constants';
 
+
+const CustomDataTableCell = ({ children, ...props }) => {
+  return (
+    <DataTableCell title={children} {...props}>
+    <Checkbox checked="true" />
+  </DataTableCell>
+  )
+}
 const columns = [
   <DataTableColumn
     key="title"
@@ -28,8 +36,10 @@ const columns = [
   <DataTableColumn
     key="sync"
     label="Sync"
-    property="Sync"
-  />
+    property="sync"
+  >
+    <CustomDataTableCell />
+  </DataTableColumn>
 ]
 
 
@@ -99,6 +109,7 @@ class FileView extends Component {
       .then(response => {
         console.log("response: ", response);
       })
+      .then(this.fetchData)
       .catch(error => {
         console.error(error);
       })
@@ -108,7 +119,7 @@ class FileView extends Component {
       console.log("previewing the file", id);
       //open file link in new tab
       const newUrl = "https://na73.salesforce.com/lightning/r/ContentDocument/" + id + "/view";
-      const win = window.open(newUrl, '_blank')
+      const win = window.open(newUrl, '_blank');
     }
 
     downloadFile = (e) => {
@@ -156,7 +167,7 @@ class FileView extends Component {
                 title: detail.ContentDocument.LatestPublishedVersion.Title,
                 lastModifiedDate: detail.ContentDocument.LatestPublishedVersion.LastModifiedDate,
                 lastModifiedBy: detail.ContentDocument.LatestPublishedVersion.LastModifiedBy.Name,
-                Sync: detail.ContentDocument.LatestPublishedVersion.FX5__Sync__c,
+                sync: detail.ContentDocument.LatestPublishedVersion.FX5__Sync__c,
                 url: detail.ContentDocument.attributes.url
               }
             })
@@ -194,7 +205,6 @@ class FileView extends Component {
                 <DataTable items={this.state.files}>
                   {columns}
                   <DataTableRowActions
-                  item=""
                   onAction={this.handleSelectionAction}
                   dropdown={<Dropdown iconCategory="utility"
                     iconName="down"
