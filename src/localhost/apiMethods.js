@@ -157,11 +157,11 @@ return {
             },
             onUploadProgress: onUploadProgress || function noOp() {}
           };
-console.log("requestConfig: ", requestConfig);
+      console.log("requestConfig: ", requestConfig);
       const apiVersion = "v42.0";
       const appVersion = "DEV";
-console.log("instance url: ", connection.instanceUrl);
-console.log("app version: ", appVersion);
+      console.log("instance url: ", connection.instanceUrl);
+      console.log("app version: ", appVersion);
       return new Promise(function(resolve, reject) {
 
         return axios.post(`${appVersion === 'DEV' ? connection.instanceUrl : ''}/services/data/${apiVersion}/sobjects/ContentVersion/`, contentVersionData, requestConfig)
@@ -178,7 +178,10 @@ console.log("app version: ", appVersion);
           .then(resolve,reject);
       });
     },
-    downloadFile: (connection, id, contentVersionData) => {
+    downloadFile: (connection, e, id, contentVersionData) => {
+      console.log("connection: ", connection);
+      console.log("id: ", id, e);
+
       var requestConfig = {
         headers: {
           ContentType: 'application/json',
@@ -190,18 +193,20 @@ console.log("app version: ", appVersion);
       const apiVersion = "v42.0";
       const appVersion = "DEV";
       const responseType = "blob";
-      return axios.get(`${appVersion === 'DEV' ? 'https:na73.salesforce.com' : ''}/services/data/${apiVersion}/sobjects/ContentVersion/0691I00000A8DM1QAN`, contentVersionData, requestConfig, responseType)
-      .then((response) => {
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement("a");
-        link.href = url;
-        link.setAttribute("download", "file.pdf");
-        link.click();
+      return new Promise(function(resolve, reject) {
+        console.log("inside the promise");
+        return axios.get(`${appVersion === 'DEV' ? connection.instanceUrl : ''}/services/data/${apiVersion}/sobjects/ContentDocument/`+ e, requestConfig, responseType)
+        .then((response) => {
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", e);
+          link.click();
+        })
+        .then(resolve, reject);
       })
 
     }
-
-
 };
 
 

@@ -111,10 +111,12 @@ class FileView extends Component {
       const win = window.open(newUrl, '_blank')
     }
 
-    downloadFile = (e, id) => {
-      console.log("downloading file");
+    downloadFile = (e) => {
+      // console.log("downloading file, connection: ", connection);//connection is id
+      console.log("state connection: ", this.state.connection);
+      const connection = this.state.connection; //without this connection comes over as record Id
       //url link to file
-      this.props.dataService.downloadFile(e, id);
+      return this.props.dataService.downloadFile(connection, e);
     }
 
     fetchData = () => {
