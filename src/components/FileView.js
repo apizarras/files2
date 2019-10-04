@@ -7,14 +7,19 @@ import queryString from 'query-string';
 import moment from 'moment';
 
 const CustomDataTableCell = ({ children, ...props }) => {
-  return (
-    <DataTableCell title={children} {...props}>
+  console.log("props.item.sync ", props.item.sync);
+  console.log("children", children);
+
+  return(
+    <DataTableCell title={children} {...props} property="sync">
+      <Checkbox checked={props.FX5__Sync__c}>
+        {children}
+      </Checkbox>
       {console.log("props, children: ", props, children)}
-      STUFF
-      {/* <Checkbox  /> */}
     </DataTableCell>
   )
 };
+CustomDataTableCell.displayName = DataTableCell.displayName;
 
 
 class FileView extends Component {
@@ -141,7 +146,7 @@ class FileView extends Component {
                 createdBy: detail.ContentDocument.LatestPublishedVersion.CreatedBy.Name,
                 lastModifiedDate: moment.utc(detail.ContentDocument.LatestPublishedVersion.LastModifiedDate).local().format('L LT'),
                 lastModifiedBy: detail.ContentDocument.LatestPublishedVersion.LastModifiedBy.Name,
-                sync: detail.ContentDocument.LatestPublishedVersion.FX5__Sync__c,
+                sync: Boolean.prototype.toString(detail.ContentDocument.LatestPublishedVersion.FX5__Sync__c),
                 url: detail.ContentDocument.attributes.url
               }
             })
@@ -159,7 +164,7 @@ class FileView extends Component {
 
     render() {
         return (
-        <IconSettings iconPath="/assets/icons">
+        <IconSettings iconPath="../../_slds/icons">
             <div className="slds-grid slds-grid_vertical component-container">
             <Card
                 heading="Files"
@@ -180,14 +185,10 @@ class FileView extends Component {
                 <DataTable items={this.state.files}>
                   <DataTableColumn label="Title" property="title" />
                   <DataTableColumn label="Created By" property="createdBy" />
-                  <DataTableColumn label="Last Modified Date" property="lastModifiedDate">
-                  </DataTableColumn>
+                  <DataTableColumn label="Last Modified Date" property="lastModifiedDate" />
                   <DataTableColumn label="Sync" property="sync">
-                      <CustomDataTableCell item={this.state.files.FX5__Sync__c} />
-
-
+                    <DataTableCell />
                   </DataTableColumn>
-
                   <DataTableRowActions
                   onAction={this.handleSelectionAction}
                   dropdown={<Dropdown iconCategory="utility"

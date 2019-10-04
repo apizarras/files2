@@ -1,15 +1,18 @@
 import React from 'react';
-import logo from './logo.svg';
+import { IconSettings } from '@salesforce/design-system-react';
 import './App.css';
 import FileView from './components/FileView';
-import Menu from './localhost/context/Menu'
+import Menu from './localhost/context/Menu';
 
 function App(props) {
   return (
-    <div className="App">
-      <Menu />
-      <FileView {...props}/>
-    </div>
+    <IconSettings iconPath="../public/_slds/icons'">
+      <div className="App">
+        <Menu />
+        <FileView {...props}/>
+      </div>
+    </IconSettings>
+
   );
 }
 
