@@ -5,21 +5,8 @@ import AddFileDialog from './AddFileDialog';
 // import * as api from '../api/api';
 import queryString from 'query-string';
 import moment from 'moment';
+import CustomDataTableCell from './CustomDataTableCell';
 
-const CustomDataTableCell = ({ children, ...props }) => {
-  console.log("props.item.sync ", props.item.sync);
-  console.log("children", children);
-
-  return(
-    <DataTableCell title={children} {...props} property="sync">
-      <Checkbox checked={props.FX5__Sync__c}>
-        {children}
-      </Checkbox>
-      {console.log("props, children: ", props, children)}
-    </DataTableCell>
-  )
-};
-CustomDataTableCell.displayName = DataTableCell.displayName;
 
 
 class FileView extends Component {
@@ -187,7 +174,7 @@ class FileView extends Component {
                   <DataTableColumn label="Created By" property="createdBy" />
                   <DataTableColumn label="Last Modified Date" property="lastModifiedDate" />
                   <DataTableColumn label="Sync" property="sync">
-                    <DataTableCell />
+                    <CustomDataTableCell />
                   </DataTableColumn>
                   <DataTableRowActions
                   onAction={this.handleSelectionAction}
