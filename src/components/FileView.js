@@ -133,7 +133,7 @@ class FileView extends Component {
                 createdBy: detail.ContentDocument.LatestPublishedVersion.CreatedBy.Name,
                 lastModifiedDate: moment.utc(detail.ContentDocument.LatestPublishedVersion.LastModifiedDate).local().format('L LT'),
                 lastModifiedBy: detail.ContentDocument.LatestPublishedVersion.LastModifiedBy.Name,
-                sync: Boolean.prototype.toString(detail.ContentDocument.LatestPublishedVersion.FX5__Sync__c),
+                sync: Boolean.prototype.valueOf(detail.ContentDocument.LatestPublishedVersion.FX5__Sync__c),
                 url: detail.ContentDocument.attributes.url
               }
             })
