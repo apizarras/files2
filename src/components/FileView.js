@@ -1,47 +1,20 @@
-import React, { Component } from 'react';
-import { Icon, IconSettings, Card, Modal, DataTable, DataTableColumn, DataTableCell, Checkbox, DataTableRowActions, Dropdown }  from '@salesforce/design-system-react';
+import React, { Component, Checkbox } from 'react';
+import { Icon, IconSettings, Card, Modal, DataTable, DataTableColumn, DataTableCell, DataTableRowActions, Dropdown }  from '@salesforce/design-system-react';
 import './FileView.css';
 import AddFileDialog from './AddFileDialog';
 // import * as api from '../api/api';
 import queryString from 'query-string';
-// import FileDataTable from './FileDataTable';
-import { createDataService } from '../localhost/apiMethods';
-import { getConnection } from '../localhost/context/Connect';
-import { CONTENTDOCUMENTLINK_FIELDS } from '../constants';
-
+import moment from 'moment';
 
 const CustomDataTableCell = ({ children, ...props }) => {
   return (
     <DataTableCell title={children} {...props}>
-    <Checkbox checked="true" />
-  </DataTableCell>
+      {console.log("props, children: ", props, children)}
+      STUFF
+      {/* <Checkbox  /> */}
+    </DataTableCell>
   )
-}
-const columns = [
-  <DataTableColumn
-    key="title"
-    label="Title"
-    property="title"
-  />,
-  <DataTableColumn
-    key="last-modified-date"
-    label="Last Modified Date"
-    property="lastModifiedDate"
-  />,
-  <DataTableColumn
-    key="last-modified-by"
-    label="Last Modified By"
-    property="lastModifiedBy"
-  />,
-  <DataTableColumn
-    key="sync"
-    label="Sync"
-    property="sync"
-  >
-    <CustomDataTableCell />
-  </DataTableColumn>
-]
-
+};
 
 
 class FileView extends Component {
@@ -165,14 +138,16 @@ class FileView extends Component {
               return {
                 id: detail.ContentDocument.Id,
                 title: detail.ContentDocument.LatestPublishedVersion.Title,
-                lastModifiedDate: detail.ContentDocument.LatestPublishedVersion.LastModifiedDate,
+                createdBy: detail.ContentDocument.LatestPublishedVersion.CreatedBy.Name,
+                lastModifiedDate: moment.utc(detail.ContentDocument.LatestPublishedVersion.LastModifiedDate).local().format('L LT'),
                 lastModifiedBy: detail.ContentDocument.LatestPublishedVersion.LastModifiedBy.Name,
                 sync: detail.ContentDocument.LatestPublishedVersion.FX5__Sync__c,
                 url: detail.ContentDocument.attributes.url
               }
             })
             console.log(fileDetails);
-            this.setState({ ...this.state, files: fileDetails})
+            this.setState({ ...this.state, files: fileDetails});
+            console.log("this.state.files", this.state.files)
             })
           .catch(function(err) {
             if (err.errorCode === 'INVALID_SESSION_ID') {
@@ -203,7 +178,16 @@ class FileView extends Component {
                         />
                 </Modal>
                 <DataTable items={this.state.files}>
-                  {columns}
+                  <DataTableColumn label="Title" property="title" />
+                  <DataTableColumn label="Created By" property="createdBy" />
+                  <DataTableColumn label="Last Modified Date" property="lastModifiedDate">
+                  </DataTableColumn>
+                  <DataTableColumn label="Sync" property="sync">
+                      <CustomDataTableCell item={this.state.files.FX5__Sync__c} />
+
+
+                  </DataTableColumn>
+
                   <DataTableRowActions
                   onAction={this.handleSelectionAction}
                   dropdown={<Dropdown iconCategory="utility"
