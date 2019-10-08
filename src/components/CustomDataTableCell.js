@@ -1,5 +1,5 @@
 import React from 'react';
-import { DataTableCell, Checkbox } from '@salesforce/design-system-react';
+import { DataTableCell, Checkbox, SetupAssistantStep } from '@salesforce/design-system-react';
 
 
 const CustomDataTableCell = ({ children, ...props }) => {
@@ -8,10 +8,17 @@ const CustomDataTableCell = ({ children, ...props }) => {
   let checkboxValue = props.item.sync;
 console.log(typeof checkboxValue);
 
+const handleCheck = (event) => {
+console.log("handleCheck called");
+if (checkboxValue === false) {
+//update state for sync to be true
+}
+};
+
   return(
     <DataTableCell title={children} {...props} property="sync">
       {console.log("props, children: ", props, children)}
-      <Checkbox checked={checkboxValue} />
+      <Checkbox checked={checkboxValue} onChange={handleCheck}/>
       { console.log("props.sync: ", props.item.sync) }
     </DataTableCell>
   )

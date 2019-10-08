@@ -15,6 +15,7 @@ class FileView extends Component {
             this.state = {
                 isOpen: false,
                 files: [],
+                fileCount: null,
                 connection: props.connection,
                 parentId: null,
                 sessionExpired: false,
@@ -43,6 +44,11 @@ class FileView extends Component {
     toggleClose = () => {
         this.setState({isOpen: false});
         console.log("toggleClose: ", this.state.isOpen)
+    }
+
+    countFiles =(fileCount) => {
+      console.log("count files called, ", fileCount)
+      this.setState({fileCount: this.state.files.length});
     }
 
     handleSelectionAction = (e, value) => {
@@ -139,7 +145,8 @@ class FileView extends Component {
             })
             console.log(fileDetails);
             this.setState({ ...this.state, files: fileDetails});
-            console.log("this.state.files", this.state.files)
+            console.log("this.state.files", this.state.files);
+            this.countFiles(files);
             })
           .catch(function(err) {
             if (err.errorCode === 'INVALID_SESSION_ID') {
@@ -154,7 +161,7 @@ class FileView extends Component {
         <IconSettings iconPath="../../_slds/icons">
             <div className="slds-grid slds-grid_vertical component-container">
             <Card
-                heading="Files"
+                heading={<h3>Files {(`(${this.state.fileCount})`)}</h3>}
                 icon={<Icon category="standard" name="document" size="small" />}
                 headerActions={<button type="button" onClick={this.toggleOpen}>Upload File</button>}
             >
