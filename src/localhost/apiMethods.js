@@ -2,7 +2,6 @@ import { CONTENTDOCUMENTLINK_FIELDS } from '../constants';
 import axios from 'axios';
 
 const createDataService = connection => {
-  console.log("connection: ", connection);
   let acls = {};
   const descriptions = {};
   const hasPermission = (permission) => {
@@ -38,14 +37,10 @@ return {
     });
   },
   deleteItems: (ids) => {
-    console.log("delete apimethod");
-    console.log("connection", connection);
-    console.log("ids", ids);
     return connection
       .sobject("ContentDocument")
       .destroy(ids)
       .then(results => {
-        console.log("results: ", results);
         const values = ids.map((id, index) => {
           return {
             id,
@@ -77,8 +72,6 @@ return {
       .sort(sortOpts.join(','))
       .execute()
       .then(result => {
-        console.log('fetchFiles:', result);
-
         return result;
       });
   },
@@ -90,12 +83,10 @@ return {
         descriptions[sobject.keyPrefix] = sobject;
         return descriptions;
       }, {});
-      console.log("sobject: ", sobjects)
       return sobjects
     });
   },
   fetchDescription: (sobject, descriptions) => {
-      console.log("descriptions", descriptions);
 
       if (descriptions[sobject]) return Promise.resolve(descriptions[sobject]);
       descriptions[sobject] = null;
@@ -134,7 +125,6 @@ return {
 
     },
   getObjectInfo: (connection, sobject, id) => {
-      console.log("sobject, id ", sobject, id);
       return connection
         .sobject(sobject)
         .select('Name, FX5__Tracking_Number__c')
@@ -146,7 +136,6 @@ return {
         });
     },
   uploadFile: (connection, parentId, contentVersionData, onUploadProgress) => {
-    console.log("apiMethods uploadFile");
       if(!contentVersionData) return Promise.reject();
 
       var requestConfig = {
@@ -157,11 +146,8 @@ return {
             },
             onUploadProgress: onUploadProgress || function noOp() {}
           };
-      console.log("requestConfig: ", requestConfig);
       const apiVersion = "v42.0";
       const appVersion = "DEV";
-      console.log("instance url: ", connection.instanceUrl);
-      console.log("app version: ", appVersion);
       return new Promise(function(resolve, reject) {
 
         return axios.post(`${appVersion === 'DEV' ? connection.instanceUrl : ''}/services/data/${apiVersion}/sobjects/ContentVersion/`, contentVersionData, requestConfig)
@@ -179,9 +165,6 @@ return {
       });
     },
     downloadFile: (connection, e, id) => {
-      console.log("connection: ", connection);
-      console.log("id: ", id, e);
-
       var requestConfig = {
         headers: {
           ContentType: 'blob',
@@ -196,7 +179,6 @@ return {
       return new Promise(function(resolve, reject) {
         return axios.get(`${appVersion === 'DEV' ? connection.instanceUrl : ''}/services/data/${apiVersion}/sobjects/ContentDocument/`+ e, requestConfig, responseType)
         .then((response) => {
-          console.log("response: ", response);
           const fileName = response.data.Title;
           const downloadUrl = connection.instanceUrl + "/sfc/servlet.shepherd/document/download/" + e;
           // const previewUrl = connection.instanceUrl + "/sfc/servlet.shepherd/version/renditionDownload?rendition=SVGZ&versionId=0681I00000BFznHQAT";
@@ -207,6 +189,19 @@ return {
         })
         .then(resolve, reject);
       })
+    },
+    toggleCheck: (connection, file) => {
+      return connection
+        .sobject('ContentVersion')
+        .update({Id: file.Id, FX5__Sync__c: file.FX5__Sync__c})
+        .then(result => {
+          if (!result.success) {
+            console.error(result.errors);
+            return result.errors;
+          }
+
+          return result.success;
+        });
     }
   }
 

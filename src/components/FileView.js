@@ -1,4 +1,4 @@
-import React, { Component, Checkbox } from 'react';
+import React, { Component } from 'react';
 import { Icon, IconSettings, Card, Modal, DataTable, DataTableColumn, DataTableCell, DataTableRowActions, Dropdown }  from '@salesforce/design-system-react';
 import './FileView.css';
 import AddFileDialog from './AddFileDialog';
@@ -30,51 +30,37 @@ class FileView extends Component {
         }
 
     componentDidMount() {
-      console.log("props: ", this.props) //props = dataService, events, settings
-      //fetch file data to render on FileDataTable
       this.fetchData();
-        console.log("component did mount", this.state);
     }
 
     toggleOpen = () => {
         this.setState({isOpen: true});
-        console.log("toggleOpen: ", this.state.isOpen);
     };
 
     toggleClose = () => {
         this.setState({isOpen: false});
-        console.log("toggleClose: ", this.state.isOpen)
     }
 
     countFiles =(fileCount) => {
-      console.log("count files called, ", fileCount)
       this.setState({fileCount: this.state.files.length});
     }
 
     handleSelectionAction = (e, value) => {
-      console.log("Id: ", this.state.files[0])
-      console.log("selected: ", e, value, e.url)
       const newValue = value.label;
       switch (newValue) {
         case "Delete":
           this.handleFileDelete(e.id);
-          console.log("call handleFileDelete");
           break;
         case "Preview":
           this.previewFile(e.id);
-          console.log("call previewFiles");
           break;
         case "Download":
           this.downloadFile(e.id);
-          console.log("call download");
           break;
       }
     }
 
     handleFileDelete = (id) => {
-      console.log("file id: ", id);
-      console.log("props: ", this.props.dataService);
-
       return this.props.dataService
       .deleteItems(id)
       .then(response => {
@@ -87,15 +73,11 @@ class FileView extends Component {
     }
 
     previewFile = (id, e) => {
-      console.log("previewing the file", id);
-      //open file link in new tab
       const newUrl = "https://na73.salesforce.com/lightning/r/ContentDocument/" + id + "/view";
       const win = window.open(newUrl, '_blank');
     }
 
     downloadFile = (e) => {
-      // console.log("downloading file, connection: ", connection);//connection is id
-      console.log("state connection: ", this.state.connection);
       const connection = this.state.connection; //without this connection comes over as record Id
       //url link to file
       return this.props.dataService.downloadFile(connection, e);
@@ -105,33 +87,23 @@ class FileView extends Component {
         const { connection } = this.props;
         const { sObjectId, embedded } = this.state;
         const descriptions = {};
-    console.log("this.state: ", this.state)
         this.setState({
           isBusy: true
         });
-    console.log("connection: ", connection);
         this.props.dataService
           .describeGlobal()
           .then((response) => {
-            console.log("response ", response);
-            console.log("connection ", connection);
-            //ContentVersion
             return this.props.dataService.fetchDescription(connection, descriptions)
           })
           .then(() => {
-            console.log(this.props.dataService);
-            console.log("state sObjectId", this.state.sObjectId);
             const description = descriptions[sObjectId.slice(0,3)];
-            console.log("description, ", description);
             return Promise.all([this.props.dataService.fetchFiles(connection, sObjectId, embedded)
               // , this.props.dataService.getObjectInfo(connection, sObjectId)
             ])
           })
           .then(([files, objectName]) => {
             this.setState({ files, objectName, isBusy: false });
-            console.log("file detail: ", this.state.files);
             const fileDetail = this.state.files;
-            console.log(this.state);
             const fileDetails = fileDetail.map(detail => {
               return {
                 id: detail.ContentDocument.Id,
@@ -143,9 +115,7 @@ class FileView extends Component {
                 url: detail.ContentDocument.attributes.url
               }
             })
-            console.log(fileDetails);
             this.setState({ ...this.state, files: fileDetails});
-            console.log("this.state.files", this.state.files);
             this.countFiles(files);
             })
           .catch(function(err) {
@@ -160,46 +130,43 @@ class FileView extends Component {
         return (
         <IconSettings iconPath="../../_slds/icons">
             <div className="slds-grid slds-grid_vertical component-container">
-            <Card
-                heading={<h3>Files {(`(${this.state.fileCount})`)}</h3>}
-                icon={<Icon category="standard" name="document" size="small" />}
-                headerActions={<button type="button" onClick={this.toggleOpen}>Upload File</button>}
-            >
-                <Modal heading="File Upload" isOpen={this.state.isOpen} ariaHideApp={false}>
-                    { console.log("sObjectId, ", this.state.sObjectId)}
-                    <AddFileDialog
-                        onSave={this.fetchData}
-                        connection={this.props.connection}
-                        parentId={this.state.sObjectId}
-                        handleClose={this.toggleClose}
-                        files={this.state.files}
-                        dataService={this.props.dataService}
-                        />
-                </Modal>
-                <DataTable items={this.state.files}>
-                  <DataTableColumn label="Title" property="title" />
-                  <DataTableColumn label="Created By" property="createdBy" />
-                  <DataTableColumn label="Last Modified Date" property="lastModifiedDate" />
-                  <DataTableColumn label="Sync" property="sync">
-                    <CustomDataTableCell />
-                  </DataTableColumn>
-                  <DataTableRowActions
-                  onAction={this.handleSelectionAction}
-                  dropdown={<Dropdown iconCategory="utility"
-                    iconName="down"
-                    // onSelect=
-                    options={[
-                      {label: "Download"},
-                      {label: "Preview"},
-                      {label: "Delete"}
-                      ]}/>} />
-                </DataTable>
-            </Card>
+              <Card
+                  heading={<h3>Files {(`(${this.state.fileCount})`)}</h3>}
+                  icon={<Icon category="standard" name="document" size="small" />}
+                  headerActions={<button type="button" onClick={this.toggleOpen}>Upload File</button>}
+              >
+                  <Modal heading="File Upload" isOpen={this.state.isOpen} ariaHideApp={false}>
+                      <AddFileDialog
+                          onSave={this.fetchData}
+                          connection={this.props.connection}
+                          parentId={this.state.sObjectId}
+                          handleClose={this.toggleClose}
+                          files={this.state.files}
+                          dataService={this.props.dataService}
+                          />
+                  </Modal>
+                  <DataTable items={this.state.files}>
+                    <DataTableColumn label="Title" property="title" />
+                    <DataTableColumn label="Created By" property="createdBy" />
+                    <DataTableColumn label="Last Modified Date" property="lastModifiedDate" />
+                    <DataTableColumn label="Sync" property="sync">
+                      <CustomDataTableCell />
+                    </DataTableColumn>
+                    <DataTableRowActions
+                    onAction={this.handleSelectionAction}
+                    dropdown={<Dropdown iconCategory="utility"
+                      iconName="down"
+                      options={[
+                        {label: "Download"},
+                        {label: "Preview"},
+                        {label: "Delete"}
+                        ]}/>} />
+                  </DataTable>
+              </Card>
             </div>
         </IconSettings>
         )
     }
-
 }
 
 export default FileView;
