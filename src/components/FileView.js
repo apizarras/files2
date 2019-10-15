@@ -146,12 +146,12 @@ class FileView extends Component {
                           />
                   </Modal>
                   <DataTable items={this.state.files}>
-                    <DataTableColumn label="Title" property="title" />
-                    <DataTableColumn label="Created By" property="createdBy" />
-                    <DataTableColumn label="Last Modified Date" property="lastModifiedDate" />
                     <DataTableColumn label="Sync" property="sync">
                       <CustomDataTableCell />
                     </DataTableColumn>
+                    <DataTableColumn label="Title" property="title" />
+                    <DataTableColumn label="Created By" property="createdBy" />
+                    <DataTableColumn label="Last Modified Date" property="lastModifiedDate" />
                     <DataTableRowActions
                     onAction={this.handleSelectionAction}
                     dropdown={<Dropdown iconCategory="utility"
