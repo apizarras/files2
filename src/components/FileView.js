@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Icon, IconSettings, Card, Modal, DataTable, DataTableColumn, DataTableCell, DataTableRowActions, Dropdown }  from '@salesforce/design-system-react';
-import './FileView.css';
+import './FileView.scss';
 import AddFileDialog from './AddFileDialog';
 // import * as api from '../api/api';
 import queryString from 'query-string';
@@ -46,6 +46,7 @@ class FileView extends Component {
     }
 
     handleSelectionAction = (e, value) => {
+      console.log("this.state: ", this.state);
       const newValue = value.label;
       switch (newValue) {
         case "Delete":
@@ -131,7 +132,7 @@ class FileView extends Component {
         <IconSettings iconPath="../../_slds/icons">
             <div className="slds-grid slds-grid_vertical component-container">
               <Card
-                  heading={<h3>Files {(`(${this.state.fileCount})`)}</h3>}
+                  heading={<div>Files {(`(${this.state.fileCount})`)}</div>}
                   icon={<Icon category="standard" name="document" size="small" />}
                   headerActions={<button type="button" onClick={this.toggleOpen}>Upload File</button>}
               >
@@ -145,7 +146,8 @@ class FileView extends Component {
                           dataService={this.props.dataService}
                           />
                   </Modal>
-                  <DataTable items={this.state.files}>
+                  <div style={{height:"20vw"}}>
+                  <DataTable fixedHeader fixedLayout items={this.state.files}>
                     <DataTableColumn label="Sync" property="sync">
                       <CustomDataTableCell />
                     </DataTableColumn>
@@ -162,6 +164,7 @@ class FileView extends Component {
                         {label: "Delete"}
                         ]}/>} />
                   </DataTable>
+                  </div>
               </Card>
             </div>
         </IconSettings>
