@@ -132,7 +132,7 @@ class FileView extends Component {
         <IconSettings iconPath="../../_slds/icons">
             <div className="slds-grid slds-grid_vertical component-container">
               <Card
-                  heading={<div>Files {(`(${this.state.fileCount})`)}</div>}
+                  heading={<strong>Files {(`(${this.state.fileCount})`)}</strong>}
                   icon={<Icon category="standard" name="document" size="small" />}
                   headerActions={<button type="button" onClick={this.toggleOpen}>Upload File</button>}
               >
@@ -146,24 +146,24 @@ class FileView extends Component {
                           dataService={this.props.dataService}
                           />
                   </Modal>
-                  <div style={{height:"20vw"}}>
-                  <DataTable fixedHeader fixedLayout items={this.state.files}>
-                    <DataTableColumn label="Sync" property="sync">
-                      <CustomDataTableCell />
-                    </DataTableColumn>
-                    <DataTableColumn label="Title" property="title" />
-                    <DataTableColumn label="Created By" property="createdBy" />
-                    <DataTableColumn label="Last Modified Date" property="lastModifiedDate" />
-                    <DataTableRowActions
-                    onAction={this.handleSelectionAction}
-                    dropdown={<Dropdown iconCategory="utility"
-                      iconName="down"
-                      options={[
-                        {label: "Download"},
-                        {label: "Preview"},
-                        {label: "Delete"}
-                        ]}/>} />
-                  </DataTable>
+                  <div className="data-table">
+                    <DataTable fixedHeader fixedLayout items={this.state.files}>
+                      <DataTableColumn label="Sync" property="sync" width="4vw">
+                        <CustomDataTableCell />
+                      </DataTableColumn>
+                      <DataTableColumn label="Title" property="title" />
+                      <DataTableColumn label="Created By" property="createdBy" />
+                      <DataTableColumn label="Last Modified Date" property="lastModifiedDate" />
+                      <DataTableRowActions
+                      onAction={this.handleSelectionAction}
+                      dropdown={<Dropdown iconCategory="utility"
+                        iconName="down"
+                        options={[
+                          {label: "Download"},
+                          {label: "Preview"},
+                          {label: "Delete"}
+                          ]}/>} />
+                    </DataTable>
                   </div>
               </Card>
             </div>

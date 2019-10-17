@@ -34,12 +34,12 @@ const CustomDataTableCell = ({ children, ...props }) => {
   // }
 
   return(
-    <DataTableCell className="slds-align_absolute-center" title={children} {...props} property="sync">
+    <DataTableCell className="slds-align_absolute-center" title="title" property="sync">
       {console.log("props, children: ", props, children)}
       <label>
         <input type="checkbox"
          value={props.item.sync}
-          onClick={(e) => setfileSync({FX5__Sync__c: !checkboxValue})} />
+          onClick={handleCheckboxChange} />
       </label>
       { console.log("props.item.sync: ", props.item.sync) }
     </DataTableCell>
