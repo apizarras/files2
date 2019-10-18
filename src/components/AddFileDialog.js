@@ -1,6 +1,7 @@
 import React from 'react';
 import { ProgressBar, SetupAssistantStep } from '@salesforce/design-system-react';
 import { NONAME } from 'dns';
+import './AddFileDialog.scss';
 
 const AddFileDialog = ({handleClose, children, isOpen, onSave, parentId, connection, ...props  }) => {
     const showHideModal = isOpen ? "modal display-block" : "modal display-none";
@@ -64,10 +65,13 @@ const AddFileDialog = ({handleClose, children, isOpen, onSave, parentId, connect
     <div className="showHideModal" isopen={isOpen}>
         <section>
           <div className="slds-modal__content slds-m-around_medium">
-            <input id='fxFileInput' type="file" className="form-control " onChange={handleFileChange}/>
-                {children}
-                {showPercentCompleted && <ProgressBar className="slds-progress-bar slds-m-around_medium" value={percentCompleted} progress color="primary" error={uploadError} />}
-
+            <label for="fxFileInput" className="custom-file-upload slds-button slds-float_left slds-m-right_medium">
+              <input id="fxFileInput" type="file" className="" onChange={handleFileChange}/>
+                  {children}
+                  {showPercentCompleted && <ProgressBar className="slds-progress-bar slds-m-around_medium" value={percentCompleted} progress color="primary" error={uploadError} />}
+            Choose File
+            </label>
+            <p className="slds-m-top_small">Select File to Upload</p>
           </div>
           <footer className="slds-modal__footer">
               <button onClick={uploadFile} className="slds-button slds-button_neutral">Upload</button>
