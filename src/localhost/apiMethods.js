@@ -36,6 +36,22 @@ return {
       defaultCurrency: 'USD'
     });
   },
+  updateItems: (connection, sobjectType, changes) => {
+    console.log("connection", connection);
+    return connection
+      .sobject(sobjectType)
+      .update(changes, { allOrNone: false })
+      .then(results => {
+        return {
+          updatedRecords: results.map(r => r.id),
+          errors: results
+            .filter(r => !r.success)
+            .map(r => {
+              return { id: r.id, message: r.errors.map(e => e.message).join(' ') };
+            })
+        };
+      });
+  },
   deleteItems: (ids) => {
     return connection
       .sobject("ContentDocument")
@@ -190,16 +206,20 @@ return {
         .then(resolve, reject);
       })
     },
-    toggleCheck: (connection, file) => {
+    toggleSyncFlag: (connection, file) => {
+      console.log("file: ", file);
+      console.log("connection: ", connection);
+
       return connection
         .sobject('ContentVersion')
-        .update({Id: file.Id, FX5__Sync__c: file.FX5__Sync__c})
+        .update({Id: file.id, FX5__Sync__c: file.sync})
+        .then(function() { console.log("made it past update")})
         .then(result => {
           if (!result.success) {
             console.error(result.errors);
             return result.errors;
           }
-
+          console.log("result: ", result);
           return result.success;
         });
     }

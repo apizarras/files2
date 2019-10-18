@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Icon, IconSettings, Card, Modal, DataTable, DataTableColumn, DataTableCell, DataTableRowActions, Dropdown }  from '@salesforce/design-system-react';
+import { Icon, IconSettings, Card, Modal, DataTable, DataTableColumn, DataTableCell, DataTableRowActions, Dropdown, Checkbox }  from '@salesforce/design-system-react';
 import './FileView.scss';
 import AddFileDialog from './AddFileDialog';
 // import * as api from '../api/api';
@@ -112,12 +112,14 @@ class FileView extends Component {
                 createdBy: detail.ContentDocument.LatestPublishedVersion.CreatedBy.Name,
                 lastModifiedDate: moment.utc(detail.ContentDocument.LatestPublishedVersion.LastModifiedDate).local().format('L LT'),
                 lastModifiedBy: detail.ContentDocument.LatestPublishedVersion.LastModifiedBy.Name,
-                sync: Boolean.prototype.valueOf(detail.ContentDocument.LatestPublishedVersion.FX5__Sync__c),
+                sync: detail.ContentDocument.LatestPublishedVersion.FX5__Sync__c,
                 url: detail.ContentDocument.attributes.url
               }
-            })
+            });
+            console.log("fileDetails: ", fileDetails)
             this.setState({ ...this.state, files: fileDetails});
             this.countFiles(files);
+            console.log("fileDetail: ", fileDetail);
             })
           .catch(function(err) {
             if (err.errorCode === 'INVALID_SESSION_ID') {
@@ -127,6 +129,22 @@ class FileView extends Component {
           })
       };
 
+      handleCheckboxChange = (file, index, id) => {
+        const { connection } = this.props;
+         const files = this.state.files
+        console.log("files: ", files);
+        console.log("ID, ", id)
+        this.setState({updatingIndex: index})
+        return this.props.dataService.toggleSyncFlag(connection, {...files, FX5__Sync__c: !files.FX5__Sync__c})
+          .then(result => {
+            let {files} = this.state;
+            const fileInfo = files[index];
+            fileInfo.ContentDocument.LatestPublishedVersion = {...file, FX5__Sync__c: !file.FX5__Sync__c};
+            files.splice(index, 1, fileInfo);
+            this.setState({files: [...files], updatingIndex: null})
+          })
+      }
+
     render() {
         return (
         <IconSettings iconPath="../../_slds/icons">
@@ -134,7 +152,7 @@ class FileView extends Component {
               <Card
                   heading={<strong>Files {(`(${this.state.fileCount})`)}</strong>}
                   icon={<Icon category="standard" name="document" size="small" />}
-                  headerActions={<button type="button" onClick={this.toggleOpen}>Upload File</button>}
+                  headerActions={<button type="button" className="slds-button slds-button_neutral" onClick={this.toggleOpen}>Upload File</button>}
               >
                   <Modal heading="File Upload" isOpen={this.state.isOpen} ariaHideApp={false}>
                       <AddFileDialog
@@ -148,8 +166,8 @@ class FileView extends Component {
                   </Modal>
                   <div className="data-table">
                     <DataTable fixedHeader fixedLayout items={this.state.files}>
-                      <DataTableColumn label="Sync" property="sync" width="4vw">
-                        <CustomDataTableCell />
+                      <DataTableColumn label="Sync" property="sync" width="20%">
+                        <CustomDataTableCell handleCheckboxChange={this.handleCheckboxChange}/>
                       </DataTableColumn>
                       <DataTableColumn label="Title" property="title" />
                       <DataTableColumn label="Created By" property="createdBy" />

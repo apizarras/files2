@@ -61,15 +61,18 @@ const AddFileDialog = ({handleClose, children, isOpen, onSave, parentId, connect
       }
 
     return (
-    <div
-        className={showHideModal} isopen={isOpen}>
-        <section className="modal-main">
-        <input id='fxFileInput' type="file" className="form-control" onChange={handleFileChange}/>
-            {children}
-            {showPercentCompleted && <ProgressBar value={percentCompleted} progress color='primary' error={uploadError} />}
+    <div className="showHideModal" isopen={isOpen}>
+        <section>
+          <div className="slds-modal__content slds-m-around_medium">
+            <input id='fxFileInput' type="file" className="form-control " onChange={handleFileChange}/>
+                {children}
+                {showPercentCompleted && <ProgressBar className="slds-progress-bar slds-m-around_medium" value={percentCompleted} progress color="primary" error={uploadError} />}
 
-            <button onClick={uploadFile}>Upload</button>
-            <button onClick={handleClose}>Cancel</button>
+          </div>
+          <footer className="slds-modal__footer">
+              <button onClick={uploadFile} className="slds-button slds-button_neutral">Upload</button>
+              <button onClick={handleClose} className="slds-button slds-button_brand">Cancel</button>
+            </footer>
         </section>
     </div>
     )
