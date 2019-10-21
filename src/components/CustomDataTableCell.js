@@ -8,12 +8,20 @@ const CustomDataTableCell = ({ children, ...props }) => {
 
   console.log("props ", props);
   console.log("children", children);
+  const items = props.items;
+  const file = {
+    id: props.item.id,
+    sync: props.item.sync
+  };
   let checkboxValue = props.item.sync;
   const Id = props.item.id;
+  const sendData = () => {
+    props.handleCheckboxChange(Id, checkboxValue, [items], file);
+  };
   return(
-    <DataTableCell className="slds-align_absolute-center" title="title" property="sync">
+    <DataTableCell className="slds-align_absolute-center" title="title" item={Id}>
       {console.log("props, Id, children: ", props, Id, children)}
-      <Checkbox checked={checkboxValue} onChange={props.handleCheckboxChange} file={props.item}/>
+      <Checkbox checked={checkboxValue} id={Id} onChange={sendData} />
     </DataTableCell>
   )
 };

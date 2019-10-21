@@ -13,6 +13,7 @@ class FileView extends Component {
     constructor(props) {
         super(props);
             this.state = {
+                selection: [],
                 isOpen: false,
                 files: [],
                 fileCount: null,
@@ -107,7 +108,8 @@ class FileView extends Component {
             const fileDetail = this.state.files;
             const fileDetails = fileDetail.map(detail => {
               return {
-                id: detail.ContentDocument.Id,
+                id: detail.ContentDocument.Id, //ContentDocumentId
+                LatestPublishedVersionId: detail.ContentDocument.LatestPublishedVersion.Id,
                 title: detail.ContentDocument.LatestPublishedVersion.Title,
                 createdBy: detail.ContentDocument.LatestPublishedVersion.CreatedBy.Name,
                 lastModifiedDate: moment.utc(detail.ContentDocument.LatestPublishedVersion.LastModifiedDate).local().format('L LT'),
@@ -129,19 +131,30 @@ class FileView extends Component {
           })
       };
 
-      handleCheckboxChange = (file, index, id) => {
+      handleCheckboxChange = (Id, checkboxValue, [items], file, index) => {
         const { connection } = this.props;
-         const files = this.state.files
-        console.log("files: ", files);
-        console.log("ID, ", id)
-        this.setState({updatingIndex: index})
-        return this.props.dataService.toggleSyncFlag(connection, {...files, FX5__Sync__c: !files.FX5__Sync__c})
+        console.log("items", items);
+        console.log("file", file);
+        this.setState({updatingIndex: index});
+         const files = this.state.files;
+         console.log("fileS", files);
+         console.log("this.state: ", this.state)
+
+        console.log("checkboxValue: ", checkboxValue);
+        console.log("ID, ", Id)
+        console.log("file.sync: ", file.sync);
+        return this.props.dataService.toggleSyncFlag(connection, {Id: file.id, FX5__Sync__c: !files.FX5__Sync__c})
           .then(result => {
+            const index = 0
             let {files} = this.state;
+            console.log("{files}", {files});
             const fileInfo = files[index];
-            fileInfo.ContentDocument.LatestPublishedVersion = {...file, FX5__Sync__c: !file.FX5__Sync__c};
+            console.log("fileInfo: ", fileInfo);
+            fileInfo.ContentDocument.LatestPublishedVersion = {...files, Id: file.id, FX5__Sync__c: !file.sync};
             files.splice(index, 1, fileInfo);
-            this.setState({files: [...files], updatingIndex: null})
+            this.setState({files: [...files], updatingIndex: null});
+
+            console.log("this.state.files: ", this.state.files)
           })
       }
 
@@ -151,7 +164,7 @@ class FileView extends Component {
             <div className="slds-grid slds-grid_vertical component-container">
               <Card
                   heading={<strong>Files {(`(${this.state.fileCount})`)}</strong>}
-                  icon={<Icon category="standard" name="document" size="small" />}
+                  icon={<Icon category="standard" name="document" size="medium" />}
                   headerActions={<button type="button" className="slds-button slds-button_neutral" onClick={this.toggleOpen}>Upload File</button>}
               >
                   <Modal heading="File Upload" isOpen={this.state.isOpen} ariaHideApp={false}>
