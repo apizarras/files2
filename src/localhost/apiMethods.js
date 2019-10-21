@@ -209,10 +209,10 @@ return {
     toggleSyncFlag: (connection, file) => {
       console.log("file: ", file);
       console.log("connection: ", connection);
-      console.log("Id, file.sync: ", file.Id, file.FX5__Sync__c)
+      console.log("Id, file.sync: ", file.LatestPublishedVersionId, file.FX5__Sync__c)
       return connection
         .sobject('ContentVersion')
-        .update({Id: '0681I00000C7DZSQA3', FX5__Sync__c: file.FX5__Sync__c})
+        .update({Id: file.LatestPublishedVersionId, FX5__Sync__c: file.sync})
         .then(result => {
           if (!result.success) {
             console.error(result.errors);

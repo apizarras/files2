@@ -11,6 +11,7 @@ const CustomDataTableCell = ({ children, ...props }) => {
   const items = props.items;
   const file = {
     id: props.item.id,
+    LatestPublishedVersionId: props.item.LatestPublishedVersionId,
     sync: props.item.sync
   };
   let checkboxValue = props.item.sync;

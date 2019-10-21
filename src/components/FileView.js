@@ -142,16 +142,17 @@ class FileView extends Component {
 
         console.log("checkboxValue: ", checkboxValue);
         console.log("ID, ", Id)
-        console.log("file.sync: ", file.sync);
-        return this.props.dataService.toggleSyncFlag(connection, {Id: file.id, FX5__Sync__c: !files.FX5__Sync__c})
+        console.log("file.sync: ", !file.sync);
+        return this.props.dataService.toggleSyncFlag(connection, {...file, sync: !file.sync})
           .then(result => {
             const index = 0
-            let {files} = this.state;
+            // let {files} = this.state;
             console.log("{files}", {files});
             const fileInfo = files[index];
             console.log("fileInfo: ", fileInfo);
-            fileInfo.ContentDocument.LatestPublishedVersion = {...files, Id: file.id, FX5__Sync__c: !file.sync};
-            files.splice(index, 1, fileInfo);
+            this.fetchData();
+            // fileInfo.ContentDocument.LatestPublishedVersion = {...files, FX5__Sync__c: !file.sync};
+            // files.splice(index, 1, fileInfo);
             this.setState({files: [...files], updatingIndex: null});
 
             console.log("this.state.files: ", this.state.files)
