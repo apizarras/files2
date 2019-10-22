@@ -78,7 +78,7 @@ class FileView extends Component {
         console.log("response: ", response);
         this.setState({fileToDelete: []});
         this.setState({showDeletePrompt: false});
-        this.setState({})
+        this.setState({selection: []});
       })
       .then(this.fetchData)
       .catch(error => {
@@ -176,7 +176,7 @@ class FileView extends Component {
         <IconSettings iconPath="../../_slds/icons">
             <div className="slds-grid slds-grid_vertical component-container">
               <Card
-                  heading={<strong>Files {(`(${this.state.fileCount})`)}</strong>}
+                  heading={this.state.fileCount > 1 && <strong>Files {(`(${this.state.fileCount})`)}</strong> || this.state.fileCount === 1 && <strong>File {(`(${this.state.fileCount})`)}</strong> }
                   icon={<Icon category="standard" name="document" size="medium" />}
                   headerActions={<button type="button" className="slds-button slds-button_neutral" onClick={this.toggleOpen}>Upload File</button>}
               >
@@ -214,7 +214,7 @@ class FileView extends Component {
                     <Button label="Cancel" onClick={() => this.setState({showDeletePrompt: false})} />,
                     <Button label="Delete" variant="brand" onClick={this.handleFileDelete} />,
                   ]}>
-                          <p>Deleting a file also removes it from any records or posts it's attached to.</p>
+                          <p className="slds-m-around_medium">Deleting a file also removes it from any records or posts it's attached to.</p>
                   </Modal>
               </Card>
             </div>
