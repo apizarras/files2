@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Icon, IconSettings, Card, Modal, DataTable, DataTableColumn, DataTableCell, DataTableRowActions, Dropdown, Checkbox }  from '@salesforce/design-system-react';
+import { Icon, IconSettings, Button, Card, Modal, DataTable, DataTableColumn, DataTableCell, DataTableRowActions, Dropdown, Checkbox }  from '@salesforce/design-system-react';
 import './FileView.scss';
 import AddFileDialog from './AddFileDialog';
 // import * as api from '../api/api';
@@ -22,7 +22,7 @@ class FileView extends Component {
                 sessionExpired: false,
                 isBusy: true,
                 isDirty: false,
-                fileToDelete: null,
+                fileToDelete: [],
                 showDeletePrompt: false,
                 embedded: (window.FX && window.FX.SALESFORCE && window.FX.SALESFORCE.embedded) || (queryString.parse(document.location.search).embedded && JSON.parse(queryString.parse(document.location.search).embedded)) || false,
                 sObjectId: (window.FX && window.FX.SALESFORCE && window.FX.SALESFORCE.currentObjectId) || queryString.parse(document.location.search).id
@@ -51,7 +51,7 @@ class FileView extends Component {
       const newValue = value.label;
       switch (newValue) {
         case "Delete":
-          this.handleFileDelete(e.id);
+          this.promptFileDelete(e.id);
           break;
         case "Preview":
           this.previewFile(e.id);
@@ -62,11 +62,23 @@ class FileView extends Component {
       }
     }
 
-    handleFileDelete = (id) => {
+    promptFileDelete = (fileInfo) => {
+      console.log("fileInfo: ", fileInfo);
+      const selection = this.state.selection
+      selection.push(fileInfo);
+      this.setState({fileToDelete: selection, showDeletePrompt: true});
+      console.log("fileToDelete: ", this.state.fileToDelete);
+    }
+
+    handleFileDelete = (fileToDelete) => {
+      const id = this.state.fileToDelete;
       return this.props.dataService
       .deleteItems(id)
       .then(response => {
         console.log("response: ", response);
+        this.setState({fileToDelete: []});
+        this.setState({showDeletePrompt: false});
+        this.setState({})
       })
       .then(this.fetchData)
       .catch(error => {
@@ -197,6 +209,13 @@ class FileView extends Component {
                           ]}/>} />
                     </DataTable>
                   </div>
+                  <Modal heading="Delete File?" isOpen={this.state.showDeletePrompt} ariaHideApp={false} disableClose
+                  footer={[
+                    <Button label="Cancel" onClick={() => this.setState({showDeletePrompt: false})} />,
+                    <Button label="Delete" variant="brand" onClick={this.handleFileDelete} />,
+                  ]}>
+                          <p>Deleting a file also removes it from any records or posts it's attached to.</p>
+                  </Modal>
               </Card>
             </div>
         </IconSettings>

@@ -53,6 +53,7 @@ return {
       });
   },
   deleteItems: (ids) => {
+    console.log("ids", ids);
     return connection
       .sobject("ContentDocument")
       .destroy(ids)
