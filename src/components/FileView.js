@@ -168,7 +168,7 @@ class FileView extends Component {
                   icon={<Icon category="standard" name="document" size="medium" />}
                   headerActions={<button type="button" className="slds-button slds-button_neutral" onClick={this.toggleOpen}>Upload File</button>}
               >
-                  <Modal heading="File Upload" isOpen={this.state.isOpen} ariaHideApp={false}>
+                  <Modal heading="Upload File" isOpen={this.state.isOpen} ariaHideApp={false} disableClose>
                       <AddFileDialog
                           onSave={this.fetchData}
                           connection={this.props.connection}

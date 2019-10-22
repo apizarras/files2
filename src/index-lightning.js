@@ -1,13 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { IconSettings } from '@salesforce/design-system-react';
+// import {
+//   LightningContextProvider,
+//   UserContextProvider,
+//   DataContextProvider
+// } from './components/Context';
 import App from './App';
 import { DESIGN_ATTRIBUTES } from './constants';
 
 export default function LightningComponent({ dataService, settings, events, connection }) {
   return (
     <IconSettings iconPath="/_slds/icons">
-        
+
             <App dataService={dataService} settings={settings} events={events} connection={connection}/>
 
     </IconSettings>
@@ -59,7 +64,8 @@ export function init(component, sessionId, eventService) {
     updateItems: (sobjectType, changes) =>
       wrap('updateItems', { sobjectType, changes: changes.map(c => JSON.stringify(c)) }),
     deleteItems: (sobjectType, ids) => wrap('deleteItems', { ids }),
-    getUser: () => wrap('fetchUser', null)
+    getUser: () => wrap('fetchUser', null),
+    fetchFiles: (sobjectId) => wrap('fetchFiles', {sobjectId})
   };
 
   const settings = DESIGN_ATTRIBUTES.reduce(

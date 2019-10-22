@@ -9,6 +9,7 @@ const AddFileDialog = ({handleClose, children, isOpen, onSave, parentId, connect
     const [showPercentCompleted, setShowPercentCompleted] = React.useState(false);
     const [uploadError, setUploadError] = React.useState(null);
     const [hasNewFile, setHasNewFile] = React.useState(false);
+    const [fileName, setFileName] = React.useState(null);
 
     function reset() {
         setUploadError(null);
@@ -23,7 +24,9 @@ const AddFileDialog = ({handleClose, children, isOpen, onSave, parentId, connect
       }
 
       const handleFileChange = (e) => {
-        setHasNewFile(!!e.target.value)
+        setHasNewFile(!!e.target.value);
+        console.log("event, props, e.target.value: ", e, props, e.target.value );
+        setFileName(e.target.value);
       };
 
     function uploadFile() {
@@ -65,13 +68,14 @@ const AddFileDialog = ({handleClose, children, isOpen, onSave, parentId, connect
     <div className="showHideModal" isopen={isOpen}>
         <section>
           <div className="slds-modal__content slds-m-around_medium">
-            <label for="fxFileInput" className="custom-file-upload slds-button slds-float_left slds-m-right_medium">
+            <label className="custom-file-upload slds-button slds-float_left slds-m-right_medium">
               <input id="fxFileInput" type="file" className="" onChange={handleFileChange}/>
-                  {children}
-                  {showPercentCompleted && <ProgressBar className="slds-progress-bar slds-m-around_medium" value={percentCompleted} progress color="primary" error={uploadError} />}
             Choose File
+            { console.log("hasnewfile, file ", hasNewFile) }
             </label>
-            <p className="slds-m-top_small">Select File to Upload</p>
+            {/* <p className="slds-m-top_small" >STUFF...</p> */}
+            {hasNewFile && <p className="slds-m-top_small">{fileName}</p> || !hasNewFile && <p className="slds-m-top_small">Select File to Upload</p>}
+            {showPercentCompleted && <ProgressBar className="slds-progress-bar slds-m-top_large" value={percentCompleted} progress color="success" error={uploadError} />}
           </div>
           <footer className="slds-modal__footer">
               <button onClick={uploadFile} className="slds-button slds-button_neutral">Upload</button>

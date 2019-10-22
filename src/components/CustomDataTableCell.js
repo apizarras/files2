@@ -5,9 +5,6 @@ import { useConnection } from '../localhost/context/Connect';
 
 
 const CustomDataTableCell = ({ children, ...props }) => {
-
-  console.log("props ", props);
-  console.log("children", children);
   const items = props.items;
   const file = {
     id: props.item.id,
@@ -21,12 +18,10 @@ const CustomDataTableCell = ({ children, ...props }) => {
   };
   return(
     <DataTableCell className="slds-align_absolute-center" title="title" item={Id}>
-      {console.log("props, Id, children: ", props, Id, children)}
       <Checkbox checked={checkboxValue} id={Id} onChange={sendData} />
     </DataTableCell>
   )
 };
 CustomDataTableCell.displayName = DataTableCell.displayName;
-console.log("customdatatablecell: ", CustomDataTableCell);
 
 export default CustomDataTableCell;
