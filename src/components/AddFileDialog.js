@@ -1,6 +1,5 @@
 import React from 'react';
 import { ProgressBar, SetupAssistantStep } from '@salesforce/design-system-react';
-import { NONAME } from 'dns';
 import './AddFileDialog.scss';
 
 const AddFileDialog = ({handleClose, children, isOpen, onSave, parentId, connection, ...props  }) => {
@@ -25,7 +24,6 @@ const AddFileDialog = ({handleClose, children, isOpen, onSave, parentId, connect
 
       const handleFileChange = (e) => {
         setHasNewFile(!!e.target.value);
-        console.log("event, props, e.target.value: ", e, props, e.target.value );
         setFileName(e.target.value);
       };
 
@@ -71,9 +69,7 @@ const AddFileDialog = ({handleClose, children, isOpen, onSave, parentId, connect
             <label className="custom-file-upload slds-button slds-float_left slds-m-right_medium">
               <input id="fxFileInput" type="file" className="" onChange={handleFileChange}/>
             Choose File
-            { console.log("hasnewfile, file ", hasNewFile) }
             </label>
-            {/* <p className="slds-m-top_small" >STUFF...</p> */}
             {hasNewFile && <p className="slds-m-top_small">{fileName}</p> || !hasNewFile && <p className="slds-m-top_small">Select File to Upload</p>}
             {showPercentCompleted && <ProgressBar className="slds-progress-bar slds-m-top_large" value={percentCompleted} progress color="success" error={uploadError} />}
           </div>

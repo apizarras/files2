@@ -104,7 +104,7 @@ return {
     });
   },
   fetchDescription: (sobject, descriptions) => {
-
+    console.log("sobject", sobject);
       if (descriptions[sobject]) return Promise.resolve(descriptions[sobject]);
       descriptions[sobject] = null;
 

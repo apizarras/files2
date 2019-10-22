@@ -7,7 +7,6 @@ import { ConnectionProvider, useConnection, useSettings } from './localhost/cont
 function LocalComponent() {
   const connection = useConnection();
   const [settings] = useSettings();
-  console.log("connection: ", connection);
   const dataService = createDataService(connection);
   return <LightningComponent settings={settings} dataService={dataService} events={events} connection={connection} />;
 }

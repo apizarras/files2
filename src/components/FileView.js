@@ -63,11 +63,9 @@ class FileView extends Component {
     }
 
     promptFileDelete = (fileInfo) => {
-      console.log("fileInfo: ", fileInfo);
       const selection = this.state.selection
       selection.push(fileInfo);
       this.setState({fileToDelete: selection, showDeletePrompt: true});
-      console.log("fileToDelete: ", this.state.fileToDelete);
     }
 
     handleFileDelete = (fileToDelete) => {
@@ -75,7 +73,6 @@ class FileView extends Component {
       return this.props.dataService
       .deleteItems(id)
       .then(response => {
-        console.log("response: ", response);
         this.setState({fileToDelete: []});
         this.setState({showDeletePrompt: false});
         this.setState({selection: []});
@@ -86,14 +83,14 @@ class FileView extends Component {
       })
     }
 
-    previewFile = (id, e) => {
-      const newUrl = "https://na73.salesforce.com/lightning/r/ContentDocument/" + id + "/view";
+    previewFile = (id) => {
+      console.log("props: ", this.props.connection);
+      const newUrl = this.props.connection.instanceUrl + `/lightning/r/ContentDocument/` + id + `/view`;
       const win = window.open(newUrl, '_blank');
     }
 
     downloadFile = (e) => {
-      const connection = this.state.connection; //without this connection comes over as record Id
-      //url link to file
+      const connection = this.state.connection;
       return this.props.dataService.downloadFile(connection, e);
     }
 
@@ -112,7 +109,7 @@ class FileView extends Component {
           .then(() => {
             const description = descriptions[sObjectId.slice(0,3)];
             return Promise.all([this.props.dataService.fetchFiles(connection, sObjectId, embedded)
-              // , this.props.dataService.getObjectInfo(connection, sObjectId)
+              //, this.props.dataService.getObjectInfo(connection, sObjectId)
             ])
           })
           .then(([files, objectName]) => {
@@ -120,7 +117,7 @@ class FileView extends Component {
             const fileDetail = this.state.files;
             const fileDetails = fileDetail.map(detail => {
               return {
-                id: detail.ContentDocument.Id, //ContentDocumentId
+                id: detail.ContentDocument.Id,
                 LatestPublishedVersionId: detail.ContentDocument.LatestPublishedVersion.Id,
                 title: detail.ContentDocument.LatestPublishedVersion.Title,
                 createdBy: detail.ContentDocument.LatestPublishedVersion.CreatedBy.Name,
@@ -130,10 +127,8 @@ class FileView extends Component {
                 url: detail.ContentDocument.attributes.url
               }
             });
-            console.log("fileDetails: ", fileDetails)
             this.setState({ ...this.state, files: fileDetails});
             this.countFiles(files);
-            console.log("fileDetail: ", fileDetail);
             })
           .catch(function(err) {
             if (err.errorCode === 'INVALID_SESSION_ID') {
@@ -145,29 +140,14 @@ class FileView extends Component {
 
       handleCheckboxChange = (Id, checkboxValue, [items], file, index) => {
         const { connection } = this.props;
-        console.log("items", items);
-        console.log("file", file);
         this.setState({updatingIndex: index});
          const files = this.state.files;
-         console.log("fileS", files);
-         console.log("this.state: ", this.state)
-
-        console.log("checkboxValue: ", checkboxValue);
-        console.log("ID, ", Id)
-        console.log("file.sync: ", !file.sync);
         return this.props.dataService.toggleSyncFlag(connection, {...file, sync: !file.sync})
           .then(result => {
             const index = 0
-            // let {files} = this.state;
-            console.log("{files}", {files});
             const fileInfo = files[index];
-            console.log("fileInfo: ", fileInfo);
             this.fetchData();
-            // fileInfo.ContentDocument.LatestPublishedVersion = {...files, FX5__Sync__c: !file.sync};
-            // files.splice(index, 1, fileInfo);
             this.setState({files: [...files], updatingIndex: null});
-
-            console.log("this.state.files: ", this.state.files)
           })
       }
 

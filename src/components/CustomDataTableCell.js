@@ -17,7 +17,7 @@ const CustomDataTableCell = ({ children, ...props }) => {
     props.handleCheckboxChange(Id, checkboxValue, [items], file);
   };
   return(
-    <DataTableCell className="slds-align_absolute-center" title="title" item={Id}>
+    <DataTableCell className="slds-align_absolute-center" title="title">
       <Checkbox checked={checkboxValue} id={Id} onChange={sendData} />
     </DataTableCell>
   )
