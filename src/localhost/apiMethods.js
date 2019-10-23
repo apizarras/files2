@@ -74,7 +74,6 @@ return {
         console.log("error: ", error)
       })
   },
-  //need to move fetchFiles method?
   fetchFiles: (connection, sobjectId, embedded) => {
     let sortOpts = ['ContentDocument.LatestPublishedVersion.SystemModStamp DESC', 'SystemModStamp DESC'];
     console.log("contentDocument fields", CONTENTDOCUMENTLINK_FIELDS);
@@ -172,9 +171,6 @@ return {
             console.log(`>>>> File uploaded successfully : `, contentVersionData.Title);
           })
           .catch(function(err) {
-            // Unauthorized has no shape, it's just the string, "Unauthorized"
-            // if (err.response && err.response.status === 401) throw err.response;
-            // var error = (err.response && err.response.data && err.response.data[0] && (err.response.data[0].errorCode + ': ' + err.response.data[0].message)) || err;
             var error = (err.response && err.response.data && err.response.data[0]) || err;
             reject(error);
           })
@@ -198,7 +194,6 @@ return {
         .then((response) => {
           const fileName = response.data.Title;
           const downloadUrl = connection.instanceUrl + "/sfc/servlet.shepherd/document/download/" + e;
-          // const previewUrl = connection.instanceUrl + "/sfc/servlet.shepherd/version/renditionDownload?rendition=SVGZ&versionId=0681I00000BFznHQAT";
           const link = document.createElement("a");
           link.href = downloadUrl;
           link.setAttribute("download", fileName);
@@ -208,9 +203,6 @@ return {
       })
     },
     toggleSyncFlag: (connection, file) => {
-      console.log("file: ", file);
-      console.log("connection: ", connection);
-      console.log("Id, file.sync: ", file.LatestPublishedVersionId, file.FX5__Sync__c)
       return connection
         .sobject('ContentVersion')
         .update({Id: file.LatestPublishedVersionId, FX5__Sync__c: file.sync})

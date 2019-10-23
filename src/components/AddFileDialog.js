@@ -3,7 +3,6 @@ import { ProgressBar, SetupAssistantStep } from '@salesforce/design-system-react
 import './AddFileDialog.scss';
 
 const AddFileDialog = ({handleClose, children, isOpen, onSave, parentId, connection, ...props  }) => {
-    const showHideModal = isOpen ? "modal display-block" : "modal display-none";
     const [percentCompleted, setPercentCompleted] = React.useState(null);
     const [showPercentCompleted, setShowPercentCompleted] = React.useState(false);
     const [uploadError, setUploadError] = React.useState(null);

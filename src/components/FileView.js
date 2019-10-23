@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { Icon, IconSettings, Button, Card, Modal, DataTable, DataTableColumn, DataTableCell, DataTableRowActions, Dropdown, Checkbox }  from '@salesforce/design-system-react';
+import { Icon, IconSettings, Button, Card, Modal, DataTable, DataTableColumn, DataTableRowActions, Dropdown, Checkbox }  from '@salesforce/design-system-react';
 import './FileView.scss';
 import AddFileDialog from './AddFileDialog';
-// import * as api from '../api/api';
 import queryString from 'query-string';
 import moment from 'moment';
 import CustomDataTableCell from './CustomDataTableCell';
@@ -144,8 +143,6 @@ class FileView extends Component {
          const files = this.state.files;
         return this.props.dataService.toggleSyncFlag(connection, {...file, sync: !file.sync})
           .then(result => {
-            const index = 0
-            const fileInfo = files[index];
             this.fetchData();
             this.setState({files: [...files], updatingIndex: null});
           })
