@@ -1,5 +1,5 @@
 import React from 'react';
-import { ProgressBar, SetupAssistantStep } from '@salesforce/design-system-react';
+import { ProgressBar } from '@salesforce/design-system-react';
 import './AddFileDialog.scss';
 
 const AddFileDialog = ({handleClose, children, isOpen, onSave, parentId, connection, ...props  }) => {
