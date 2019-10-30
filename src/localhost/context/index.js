@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Connect from './Connect';
-// import Menu from './Menu';
+import Menu from './Menu';
 import { SettingsProvider } from './Settings';
 import DesignAttributesEditor from './DesignAttributesEditor';
 
@@ -27,7 +27,7 @@ export const ConnectionProvider = ({ children }) => {
             bottom: 0,
             left: 0,
           }}>
-
+        <Menu />
           <div className="slds-brand-band slds-brand-band_medium">
             <section
               style={{

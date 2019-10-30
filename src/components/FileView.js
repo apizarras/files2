@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
-import { Icon, IconSettings, Button, Card, Modal, DataTable, DataTableColumn, DataTableRowActions, Dropdown, Checkbox }  from '@salesforce/design-system-react';
+import { Icon, IconSettings, Button, Card, Modal, DataTable, DataTableColumn, DataTableRowActions, Dropdown }  from '@salesforce/design-system-react';
 import './FileView.scss';
 import AddFileDialog from './AddFileDialog';
 import queryString from 'query-string';
 import moment from 'moment';
 import CustomDataTableCell from './CustomDataTableCell';
-
+import { ComponentContext } from './Context/context';
 
 
 class FileView extends Component {
-    constructor(props) {
+  static contextType = ComponentContext;
+
+  constructor(props) {
         super(props);
             this.state = {
                 selection: [],
@@ -69,7 +71,8 @@ class FileView extends Component {
 
     handleFileDelete = (fileToDelete) => {
       const id = this.state.fileToDelete;
-      return this.props.dataService
+      const { api } = this.context;
+      return api
       .deleteItems(id)
       .then(response => {
         this.setState({fileToDelete: []});
@@ -89,26 +92,29 @@ class FileView extends Component {
     }
 
     downloadFile = (e) => {
+      const { api } = this.context;
       const connection = this.state.connection;
-      return this.props.dataService.downloadFile(connection, e);
+      return api.downloadFile(connection, e);
     }
 
     fetchData = () => {
+        const { api } = this.context;
         const { connection } = this.props;
         const { sObjectId, embedded } = this.state;
+        console.log("this.state: ", this.state);
         const descriptions = {};
         this.setState({
           isBusy: true
         });
-        this.props.dataService
+        api
           .describeGlobal()
           .then((response) => {
-            return this.props.dataService.fetchDescription(connection, descriptions)
+            return api.fetchDescription(connection, sObjectId, descriptions)
           })
           .then(() => {
             const description = descriptions[sObjectId.slice(0,3)];
-            return Promise.all([this.props.dataService.fetchFiles(connection, sObjectId, embedded)
-              //, this.props.dataService.getObjectInfo(connection, sObjectId)
+            return Promise.all([api.fetchFiles(connection, sObjectId, embedded)
+              //, api.getObjectInfo(connection, sObjectId)
             ])
           })
           .then(([files, objectName]) => {
@@ -138,10 +144,11 @@ class FileView extends Component {
       };
 
       handleCheckboxChange = (Id, checkboxValue, [items], file, index) => {
+        const { api } = this.context;
         const { connection } = this.props;
         this.setState({updatingIndex: index});
          const files = this.state.files;
-        return this.props.dataService.toggleSyncFlag(connection, {...file, sync: !file.sync})
+        return api.toggleSyncFlag(connection, {...file, sync: !file.sync})
           .then(result => {
             this.fetchData();
             this.setState({files: [...files], updatingIndex: null});
@@ -164,7 +171,7 @@ class FileView extends Component {
                           parentId={this.state.sObjectId}
                           handleClose={this.toggleClose}
                           files={this.state.files}
-                          dataService={this.props.dataService}
+                          dataService={this.context}
                           />
                   </Modal>
                   <div className="data-table">

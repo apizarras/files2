@@ -99,7 +99,7 @@ return {
         descriptions[sobject.keyPrefix] = sobject;
         return descriptions;
       }, {});
-      return sobjects
+      return sobjects;
     });
   },
   fetchDescription: (sobject, descriptions) => {
@@ -246,4 +246,10 @@ const events = {
   }
 };
 
-export { lightningEventsCallback, updateCellCallback, createDataService, events };
+const eventService = () => {
+  return {
+    refreshView: () => console.log('Triggered force:refreshView')
+  };
+};
+
+export { lightningEventsCallback, updateCellCallback, createDataService, events, eventService };

@@ -1,23 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { IconSettings } from '@salesforce/design-system-react';
-// import {
-//   LightningContextProvider,
-//   UserContextProvider,
-//   DataContextProvider
-// } from './components/Context';
 import App from './App';
 import { DESIGN_ATTRIBUTES } from './constants';
-
-export default function LightningComponent({ dataService, settings, events, connection }) {
-  return (
-    <IconSettings iconPath="/_slds/icons">
-
-            <App dataService={dataService} settings={settings} events={events} connection={connection}/>
-
-    </IconSettings>
-  );
-}
 
 export function init(component, sessionId, eventService) {
   const containerElement = component.find('root').getElement();
@@ -77,7 +61,7 @@ export function init(component, sessionId, eventService) {
   );
 
   ReactDOM.render(
-    <LightningComponent dataService={dataService} settings={settings} events={eventService} />,
+    <App dataService={dataService} settings={settings} eventService={eventService} />,
     containerElement
   );
 }
