@@ -6,10 +6,11 @@ import { ConnectionProvider, useConnection, useSettings } from './localhost/cont
 
 function LocalComponent() {
   const connection = useConnection();
+  console.log("connection", connection);
   const [settings] = useSettings();
   const dataService = api.createDataService(connection);
   const eventService = api.eventService();
-  return <App settings={settings} dataService={dataService} eventService={eventService} />;
+  return <App settings={settings} dataService={dataService} eventService={eventService} connection={connection}/>;
 }
 
 ReactDOM.render(

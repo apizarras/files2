@@ -7,12 +7,6 @@ export const DESIGN_ATTRIBUTES = [
     defaultValue: 'FX5__Ticket__c'
   },
   {
-    name: 'sObjectId',
-    label: 'Page object sObject ID',
-    type: 'string',
-    defaultValue: '01I2F0000006SMK'
-  },
-  {
     name: 'recordId',
     label: 'Page Record Id',
     type: 'string',

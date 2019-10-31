@@ -10,6 +10,7 @@ import { ComponentContext } from './Context/context';
 
 class FileView extends Component {
   static contextType = ComponentContext;
+  sObjectId = null;
 
   constructor(props) {
         super(props);
@@ -26,8 +27,6 @@ class FileView extends Component {
                 fileToDelete: [],
                 showDeletePrompt: false,
                 embedded: (window.FX && window.FX.SALESFORCE && window.FX.SALESFORCE.embedded) || (queryString.parse(document.location.search).embedded && JSON.parse(queryString.parse(document.location.search).embedded)) || false,
-                sObjectId: (window.FX && window.FX.SALESFORCE && window.FX.SALESFORCE.currentObjectId) || queryString.parse(document.location.search).id
-
             }
         }
 
@@ -98,10 +97,19 @@ class FileView extends Component {
     }
 
     fetchData = () => {
+        this.data =
+        {
+          sObjectId: this.context.settings.recordId,
+          sobject: this.context.settings.sobject,
+          connection: this.context.connection
+        };
         const { api } = this.context;
-        const { connection } = this.props;
-        const { sObjectId, embedded } = this.state;
-        console.log("this.state: ", this.state);
+        console.log("contextTypen: ", this.context);
+        console.log("this.data: ", this.data);
+        const sObjectId = this.data.sObjectId;
+        const sobject = 'ContentDocument';
+        const connection = this.data.connection;
+        const { embedded } = this.state;
         const descriptions = {};
         this.setState({
           isBusy: true
@@ -109,7 +117,8 @@ class FileView extends Component {
         api
           .describeGlobal()
           .then((response) => {
-            return api.fetchDescription(connection, sObjectId, descriptions)
+            console.log("sobjectId", sObjectId);
+            return api.fetchDescription(sobject, descriptions)
           })
           .then(() => {
             const description = descriptions[sObjectId.slice(0,3)];
@@ -133,6 +142,7 @@ class FileView extends Component {
               }
             });
             this.setState({ ...this.state, files: fileDetails});
+            console.log("this.state.files: ", this.state.files);
             this.countFiles(files);
             })
           .catch(function(err) {

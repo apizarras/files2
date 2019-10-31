@@ -77,6 +77,8 @@ return {
   fetchFiles: (connection, sobjectId, embedded) => {
     let sortOpts = ['ContentDocument.LatestPublishedVersion.SystemModStamp DESC', 'SystemModStamp DESC'];
     console.log("contentDocument fields", CONTENTDOCUMENTLINK_FIELDS);
+    console.log("connection: ", connection);
+    console.log("sObjectId: ", sobjectId);
     if (embedded) {
       // sort by FX5__Sync__c first, so synced files show first in compact view
       sortOpts.splice(0,0,'ContentDocument.LatestPublishedVersion.FX5__Sync__c DESC');
@@ -88,6 +90,7 @@ return {
       .sort(sortOpts.join(','))
       .execute()
       .then(result => {
+        console.log("result: ", result);
         return result;
       });
   },
