@@ -171,7 +171,8 @@ return {
 
         return axios.post(`${appVersion === 'DEV' ? connection.instanceUrl : ''}/services/data/${apiVersion}/sobjects/ContentVersion/`, contentVersionData, requestConfig)
           .then(function(){
-            console.log(`>>>> File uploaded successfully : `, contentVersionData.Title);
+            console.log(`>>>> File uploaded successfully : `, contentVersionData.Title, contentVersionData);
+            console.log("resolve? ", resolve);
           })
           .catch(function(err) {
             var error = (err.response && err.response.data && err.response.data[0]) || err;
@@ -205,10 +206,11 @@ return {
         .then(resolve, reject);
       })
     },
-    toggleSyncFlag: (connection, file) => {
+    toggleSyncFlag: (file) => {
+      console.log("file, files, item", file)
       return connection
         .sobject('ContentVersion')
-        .update({Id: file.LatestPublishedVersionId, FX5__Sync__c: file.sync})
+        .update({Id: file.LatestPublishedVersionId, FX5__Sync__c: !file.sync})
         .then(result => {
           if (!result.success) {
             console.error(result.errors);

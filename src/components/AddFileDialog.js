@@ -1,13 +1,17 @@
 import React from 'react';
 import { ProgressBar } from '@salesforce/design-system-react';
 import './AddFileDialog.scss';
+import { ComponentContext, useComponentContext } from './Context/context';
 
-const AddFileDialog = ({handleClose, children, isOpen, onSave, parentId, connection, ...props  }) => {
+
+const AddFileDialog = ({handleClose, children, isOpen, onSave, sObjectId, ...props  }) => {
     const [percentCompleted, setPercentCompleted] = React.useState(null);
     const [showPercentCompleted, setShowPercentCompleted] = React.useState(false);
     const [uploadError, setUploadError] = React.useState(null);
     const [hasNewFile, setHasNewFile] = React.useState(false);
     const [fileName, setFileName] = React.useState(null);
+    const { api, connection } = useComponentContext();
+    const parentId = props.dataService.settings.recordId;
 
     function reset() {
         setUploadError(null);
@@ -27,13 +31,15 @@ const AddFileDialog = ({handleClose, children, isOpen, onSave, parentId, connect
       };
 
     function uploadFile() {
+      console.log("file: ", file);
+      console.log("parentId", parentId);
+      console.log("api: ", api);
         const fxFileInput = document.getElementById('fxFileInput');
         var file = fxFileInput.files[0];
         if (!file) return Promise.resolve();
 
         setShowPercentCompleted(true);
         var reader = new FileReader();
-
         return new Promise(function(resolve, reject){
           reader.onload = function( e ) {
             var fileData = btoa( e.target.result );
@@ -48,7 +54,7 @@ const AddFileDialog = ({handleClose, children, isOpen, onSave, parentId, connect
               console.log(`%c>>>> percentCompleted `, `background-color: yellow;` , percentCompleted, progressEvent );
             };
 
-            return props.dataService.uploadFile( connection, parentId, contentVersionData, onUploadProgress )
+            return api.uploadFile( connection, parentId, contentVersionData, onUploadProgress )
               .then(resolve, reject);
           };
 

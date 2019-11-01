@@ -55,7 +55,10 @@ export function createApi(dataService) {
         console.error(e);
       }
     },
-    insertItems: dataService.insertItems
+    insertItems: dataService.insertItems,
+    uploadFile: dataService.uploadFile,
+    downloadFile: dataService.downloadFile,
+    toggleSyncFlag: dataService.toggleSyncFlag
   };
 }
 

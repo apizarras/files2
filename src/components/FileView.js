@@ -86,13 +86,13 @@ class FileView extends Component {
 
     previewFile = (id) => {
       console.log("props: ", this.props.connection);
-      const newUrl = this.props.connection.instanceUrl + `/lightning/r/ContentDocument/` + id + `/view`;
+      const newUrl = this.data.connection.instanceUrl + `/lightning/r/ContentDocument/` + id + `/view`;
       const win = window.open(newUrl, '_blank');
     }
 
     downloadFile = (e) => {
       const { api } = this.context;
-      const connection = this.state.connection;
+      const connection = this.data.connection;
       return api.downloadFile(connection, e);
     }
 
@@ -106,7 +106,8 @@ class FileView extends Component {
         const { api } = this.context;
         console.log("contextTypen: ", this.context);
         console.log("this.data: ", this.data);
-        const sObjectId = this.data.sObjectId;
+        const parentId = this.data.sObjectId;
+        const sObjectId = parentId;
         const sobject = 'ContentDocument';
         const connection = this.data.connection;
         const { embedded } = this.state;
@@ -154,11 +155,15 @@ class FileView extends Component {
       };
 
       handleCheckboxChange = (Id, checkboxValue, [items], file, index) => {
+        console.log("this.context: ", this.context);
         const { api } = this.context;
-        const { connection } = this.props;
+        const { connection } = this.context;
         this.setState({updatingIndex: index});
-         const files = this.state.files;
-        return api.toggleSyncFlag(connection, {...file, sync: !file.sync})
+        console.log("index: ", index);
+        const files = this.state.files;
+        console.log("file", file);
+         console.log("this.state", this.state);
+        return api.toggleSyncFlag(file)
           .then(result => {
             this.fetchData();
             this.setState({files: [...files], updatingIndex: null});
