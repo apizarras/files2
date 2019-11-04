@@ -74,7 +74,7 @@ return {
         console.log("error: ", error)
       })
   },
-  fetchFiles: (connection, sobjectId, embedded) => {
+  fetchFiles: (sobjectId, embedded) => {
     let sortOpts = ['ContentDocument.LatestPublishedVersion.SystemModStamp DESC', 'SystemModStamp DESC'];
     console.log("contentDocument fields", CONTENTDOCUMENTLINK_FIELDS);
     console.log("connection: ", connection);
@@ -154,7 +154,7 @@ return {
           return rec.FX5__Tracking_Number__c;
         });
     },
-  uploadFile: (connection, parentId, contentVersionData, onUploadProgress) => {
+  uploadFile: (parentId, contentVersionData, onUploadProgress) => {
       if(!contentVersionData) return Promise.reject();
 
       var requestConfig = {
@@ -181,7 +181,7 @@ return {
           .then(resolve,reject);
       });
     },
-    downloadFile: (connection, e, id) => {
+    downloadFile: (e, id) => {
       var requestConfig = {
         headers: {
           ContentType: 'blob',

@@ -8,9 +8,13 @@ function LocalComponent() {
   const connection = useConnection();
   console.log("connection", connection);
   const [settings] = useSettings();
+  console.log("settings", settings);
+
   const dataService = api.createDataService(connection);
+  console.log("dataService", dataService);
+
   const eventService = api.eventService();
-  return <App settings={settings} dataService={dataService} eventService={eventService} connection={connection}/>;
+  return <App settings={settings} dataService={dataService} eventService={eventService}/>;
 }
 
 ReactDOM.render(

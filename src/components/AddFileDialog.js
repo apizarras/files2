@@ -10,7 +10,7 @@ const AddFileDialog = ({handleClose, children, isOpen, onSave, sObjectId, ...pro
     const [uploadError, setUploadError] = React.useState(null);
     const [hasNewFile, setHasNewFile] = React.useState(false);
     const [fileName, setFileName] = React.useState(null);
-    const { api, connection } = useComponentContext();
+    const { api } = useComponentContext();
     const parentId = props.dataService.settings.recordId;
 
     function reset() {
@@ -54,7 +54,7 @@ const AddFileDialog = ({handleClose, children, isOpen, onSave, sObjectId, ...pro
               console.log(`%c>>>> percentCompleted `, `background-color: yellow;` , percentCompleted, progressEvent );
             };
 
-            return api.uploadFile( connection, parentId, contentVersionData, onUploadProgress )
+            return api.uploadFile( parentId, contentVersionData, onUploadProgress )
               .then(resolve, reject);
           };
 

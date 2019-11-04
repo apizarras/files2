@@ -19,7 +19,6 @@ class FileView extends Component {
                 isOpen: false,
                 files: [],
                 fileCount: null,
-                connection: props.connection,
                 parentId: null,
                 sessionExpired: false,
                 isBusy: true,
@@ -85,23 +84,22 @@ class FileView extends Component {
     }
 
     previewFile = (id) => {
-      console.log("props: ", this.props.connection);
-      const newUrl = this.data.connection.instanceUrl + `/lightning/r/ContentDocument/` + id + `/view`;
+      const { api } = this.context;
+      console.log("context: ", this.context);
+      const newUrl = this.context.settings.instanceUrl + `/lightning/r/ContentDocument/` + id + `/view`;
       const win = window.open(newUrl, '_blank');
     }
 
     downloadFile = (e) => {
       const { api } = this.context;
-      const connection = this.data.connection;
-      return api.downloadFile(connection, e);
+      return api.downloadFile(e);
     }
 
     fetchData = () => {
         this.data =
         {
           sObjectId: this.context.settings.recordId,
-          sobject: this.context.settings.sobject,
-          connection: this.context.connection
+          sobject: this.context.settings.sobject
         };
         const { api } = this.context;
         console.log("contextTypen: ", this.context);
@@ -109,7 +107,6 @@ class FileView extends Component {
         const parentId = this.data.sObjectId;
         const sObjectId = parentId;
         const sobject = 'ContentDocument';
-        const connection = this.data.connection;
         const { embedded } = this.state;
         const descriptions = {};
         this.setState({
@@ -123,7 +120,7 @@ class FileView extends Component {
           })
           .then(() => {
             const description = descriptions[sObjectId.slice(0,3)];
-            return Promise.all([api.fetchFiles(connection, sObjectId, embedded)
+            return Promise.all([api.fetchFiles(sObjectId, embedded)
               //, api.getObjectInfo(connection, sObjectId)
             ])
           })
@@ -157,7 +154,6 @@ class FileView extends Component {
       handleCheckboxChange = (Id, checkboxValue, [items], file, index) => {
         console.log("this.context: ", this.context);
         const { api } = this.context;
-        const { connection } = this.context;
         this.setState({updatingIndex: index});
         console.log("index: ", index);
         const files = this.state.files;

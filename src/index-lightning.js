@@ -53,6 +53,7 @@ export function init(component, sessionId, eventService) {
     fetchDescription: (sobject) => wrap('fetchDescription', { sobject }),
     uploadFile: (contentVersionData) => wrap('uploadFile', {contentVersionData}),
     downloadFile: (id) => wrap('downloadFile', id),
+    //shouldn't need toggle sync flag, should be using updateItems
     toggleSyncFlag: (file) => wrap('toggleSyncFlag', { file })
   };
 

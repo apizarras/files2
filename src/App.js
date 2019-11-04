@@ -4,15 +4,14 @@ import { IconSettings } from '@salesforce/design-system-react';
 import FileView from './components/FileView';
 
 export default function LightningComponent(props) {
-  const { settings, dataService, eventService, connection } = props;
-  console.log("connection: ", connection);
+  const { settings, dataService, eventService } = props;
+  console.log("props: ", props);
   return (
     <IconSettings iconPath="../public/_slds/icons">
       <ComponentContextProvider
         settings={settings}
         dataService={dataService}
-        eventService={eventService}
-        connection={connection}>
+        eventService={eventService}>
         <App/>
       </ComponentContextProvider>
     </IconSettings>
@@ -20,9 +19,9 @@ export default function LightningComponent(props) {
 }
 
 const App = () => {
-  const { api, settings, connection } = useComponentContext();
+  const { api, settings } = useComponentContext();
   const [description, setDescription] = useState();
-  console.log("connection: ", connection);
+  console.log("connection/api: ", api);
 
   useEffect(() => {
     async function fetch() {
@@ -35,7 +34,7 @@ const App = () => {
     }
 
     fetch();
-  }, [api, settings, connection]);
+  }, [api, settings]);
 
   if (!description) return null;
 
